@@ -25,6 +25,8 @@ interface Profile {
   mobile_number: string;
   photo_url: string | null;
   user_id: string;
+  gender: string;
+  location: string;
 }
 
 const Index = () => {
@@ -36,6 +38,8 @@ const Index = () => {
     name: "",
     email: "",
     mobile_number: "",
+    gender: "man" as "man" | "woman",
+    location: "",
     photo: null as File | null,
   });
   const navigate = useNavigate();
@@ -63,11 +67,13 @@ const Index = () => {
       setCurrentProfile(profile);
       
       // Check if profile is incomplete
-      if (!profile.name || !profile.mobile_number) {
+      if (!profile.name || !profile.mobile_number || !profile.gender || !profile.location) {
         setProfileForm({
           name: profile.name || "",
           email: profile.email || session.user.email || "",
           mobile_number: profile.mobile_number || "",
+          gender: (profile.gender || "man") as "man" | "woman",
+          location: profile.location || "",
           photo: null,
         });
         setShowProfileDialog(true);
@@ -76,13 +82,28 @@ const Index = () => {
   };
 
   const fetchProfiles = async () => {
-    const { data, error } = await supabase
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { data: currentUserProfile } = await supabase
+      .from("profiles")
+      .select("location")
+      .eq("user_id", user.id)
+      .single();
+
+    let query = supabase
       .from("profiles")
       .select("*")
       .order("created_at", { ascending: false });
 
+    // Filter by location if available
+    if (currentUserProfile?.location) {
+      query = query.eq("location", currentUserProfile.location);
+    }
+
+    const { data, error } = await query;
+
     if (!error && data) {
-      const { data: { user } } = await supabase.auth.getUser();
       const filteredProfiles = data.filter((p) => p.user_id !== user?.id);
       setProfiles(filteredProfiles);
     }
@@ -94,7 +115,7 @@ const Index = () => {
   };
 
   const updateProfile = async () => {
-    if (!currentProfile || !profileForm.name || !profileForm.mobile_number) {
+    if (!currentProfile || !profileForm.name || !profileForm.mobile_number || !profileForm.location) {
       toast.error("Please fill in all required fields");
       return;
     }
@@ -127,6 +148,8 @@ const Index = () => {
         .update({
           name: profileForm.name,
           mobile_number: profileForm.mobile_number,
+          gender: profileForm.gender,
+          location: profileForm.location,
           photo_url: photoUrl,
         })
         .eq("id", currentProfile.id);
@@ -149,7 +172,7 @@ const Index = () => {
             <div className="bg-primary rounded-full p-2">
               <MessageSquare className="w-6 h-6 text-primary-foreground" />
             </div>
-            <h1 className="text-2xl font-bold text-card-foreground">MessageHub</h1>
+            <h1 className="text-2xl font-bold text-card-foreground">OTHERS</h1>
           </div>
           <div className="flex items-center gap-2">
             <Button
@@ -168,8 +191,10 @@ const Index = () => {
 
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-foreground mb-2">Connect & Chat</h2>
-          <p className="text-muted-foreground">Select a profile to start messaging</p>
+          <h2 className="text-3xl font-bold text-foreground mb-2">Discover People Near You</h2>
+          <p className="text-muted-foreground">
+            {currentProfile?.location ? `Showing profiles in ${currentProfile.location}` : "Complete your profile to see matches"}
+          </p>
         </div>
 
         {currentProfile && (
@@ -196,7 +221,7 @@ const Index = () => {
           <div className="text-center py-16">
             <MessageSquare className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
             <p className="text-xl text-muted-foreground">
-              No other profiles yet. Invite friends to join!
+              No matches in your area yet. Check back soon!
             </p>
           </div>
         )}
@@ -256,6 +281,27 @@ const Index = () => {
                   setProfileForm({ ...profileForm, mobile_number: e.target.value })
                 }
                 placeholder="Enter your mobile number"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="profile-gender">Gender *</Label>
+              <select
+                id="profile-gender"
+                value={profileForm.gender}
+                onChange={(e) => setProfileForm({ ...profileForm, gender: e.target.value as "man" | "woman" })}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <option value="man">Man</option>
+                <option value="woman">Woman</option>
+              </select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="profile-location">Location *</Label>
+              <Input
+                id="profile-location"
+                value={profileForm.location}
+                onChange={(e) => setProfileForm({ ...profileForm, location: e.target.value })}
+                placeholder="City, State or Country"
               />
             </div>
             <Button onClick={updateProfile} className="w-full">

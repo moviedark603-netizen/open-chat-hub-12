@@ -89,7 +89,9 @@ export type Database = {
         Row: {
           created_at: string | null
           email: string
+          gender: string | null
           id: string
+          location: string | null
           mobile_number: string
           name: string
           photo_url: string | null
@@ -98,7 +100,9 @@ export type Database = {
         Insert: {
           created_at?: string | null
           email: string
+          gender?: string | null
           id?: string
+          location?: string | null
           mobile_number: string
           name: string
           photo_url?: string | null
@@ -107,7 +111,9 @@ export type Database = {
         Update: {
           created_at?: string | null
           email?: string
+          gender?: string | null
           id?: string
+          location?: string | null
           mobile_number?: string
           name?: string
           photo_url?: string | null

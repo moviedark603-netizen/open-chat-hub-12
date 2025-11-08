@@ -14,6 +14,8 @@ const signupSchema = z.object({
   email: z.string().trim().email("Invalid email address").max(255),
   mobile: z.string().trim().min(10, "Mobile number must be at least 10 digits").max(20),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  gender: z.enum(["man", "woman"], { required_error: "Please select your gender" }),
+  location: z.string().trim().min(1, "Location is required").max(200),
 });
 
 const loginSchema = z.object({
@@ -29,6 +31,8 @@ const Auth = () => {
     email: "",
     mobile: "",
     password: "",
+    gender: "man" as "man" | "woman",
+    location: "",
   });
   const navigate = useNavigate();
 
@@ -56,6 +60,8 @@ const Auth = () => {
           data: {
             name: validated.name,
             mobile_number: validated.mobile,
+            gender: validated.gender,
+            location: validated.location,
           },
           emailRedirectTo: `${window.location.origin}/`,
         },
@@ -116,12 +122,12 @@ const Auth = () => {
             </div>
           </div>
           <CardTitle className="text-3xl font-bold">
-            {isLogin ? "Welcome Back" : "Create Account"}
+            {isLogin ? "Welcome Back" : "Join OTHERS"}
           </CardTitle>
           <CardDescription>
             {isLogin
-              ? "Sign in to continue messaging"
-              : "Join to start connecting with others"}
+              ? "Sign in to find your match"
+              : "Create your profile and find meaningful connections"}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -147,6 +153,30 @@ const Auth = () => {
                     value={formData.mobile}
                     onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
                     placeholder="Enter your mobile number"
+                    required={!isLogin}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="gender">I am a</Label>
+                  <select
+                    id="gender"
+                    value={formData.gender}
+                    onChange={(e) => setFormData({ ...formData, gender: e.target.value as "man" | "woman" })}
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    required={!isLogin}
+                  >
+                    <option value="man">Man</option>
+                    <option value="woman">Woman</option>
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="location">Location</Label>
+                  <Input
+                    id="location"
+                    type="text"
+                    value={formData.location}
+                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    placeholder="City, State or Country"
                     required={!isLogin}
                   />
                 </div>
@@ -196,7 +226,7 @@ const Auth = () => {
               variant="link"
               onClick={() => {
                 setIsLogin(!isLogin);
-                setFormData({ name: "", email: "", mobile: "", password: "" });
+                setFormData({ name: "", email: "", mobile: "", password: "", gender: "man", location: "" });
               }}
               className="text-sm"
             >
