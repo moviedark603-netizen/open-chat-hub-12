@@ -1,20 +1,24 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ArrowLeft, Send } from "lucide-react";
+import { ArrowLeft, Send, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
+import AudioRecorder from "@/components/AudioRecorder";
+import MessageItem from "@/components/MessageItem";
 
 const messageSchema = z.object({
-  content: z.string().trim().min(1, "Message cannot be empty").max(1000, "Message too long"),
+  content: z.string().trim().max(1000, "Message too long"),
 });
 
 interface Message {
   id: string;
   content: string;
+  message_type: string;
+  media_url: string | null;
   created_at: string;
   sender_id: string;
 }
@@ -33,6 +37,9 @@ const Messages = () => {
   const [currentProfile, setCurrentProfile] = useState<Profile | null>(null);
   const [otherProfile, setOtherProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchProfiles = async () => {
@@ -86,6 +93,10 @@ const Messages = () => {
     };
   }, [profileId, navigate]);
 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   const fetchMessages = async () => {
     if (!profileId) return;
 
@@ -128,6 +139,7 @@ const Messages = () => {
         sender_id: currentProfile.id,
         receiver_id: profileId,
         content: validated.content,
+        message_type: "text",
       });
 
       if (error) throw error;
@@ -141,6 +153,94 @@ const Messages = () => {
       }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !currentProfile || !profileId) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be less than 5MB");
+      return;
+    }
+
+    try {
+      setUploading(true);
+
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("photos")
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from("photos")
+        .getPublicUrl(fileName);
+
+      const { error } = await supabase.from("messages").insert({
+        sender_id: currentProfile.id,
+        receiver_id: profileId,
+        content: "",
+        message_type: "image",
+        media_url: publicUrl,
+      });
+
+      if (error) throw error;
+
+      toast.success("Image sent!");
+    } catch (error: any) {
+      toast.error(error.message || "Error uploading image");
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
+  const handleAudioRecorded = async (audioBlob: Blob) => {
+    if (!currentProfile || !profileId) return;
+
+    try {
+      setUploading(true);
+
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const fileName = `${user.id}/${Date.now()}.webm`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("photos")
+        .upload(fileName, audioBlob);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from("photos")
+        .getPublicUrl(fileName);
+
+      const { error } = await supabase.from("messages").insert({
+        sender_id: currentProfile.id,
+        receiver_id: profileId,
+        content: "",
+        message_type: "audio",
+        media_url: publicUrl,
+      });
+
+      if (error) throw error;
+
+      toast.success("Voice message sent!");
+    } catch (error: any) {
+      toast.error(error.message || "Error sending audio");
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -169,32 +269,31 @@ const Messages = () => {
         {messages.map((message) => {
           const isSent = message.sender_id === currentProfile?.id;
           return (
-            <div
-              key={message.id}
-              className={`flex ${isSent ? "justify-end" : "justify-start"}`}
-            >
-              <div
-                className={`max-w-xs md:max-w-md px-4 py-2 rounded-2xl ${
-                  isSent
-                    ? "bg-message-sent text-message-sent-foreground rounded-tr-sm"
-                    : "bg-message-received text-message-received-foreground rounded-tl-sm"
-                } shadow-soft`}
-              >
-                <p className="break-words">{message.content}</p>
-                <p className={`text-xs mt-1 ${isSent ? "text-message-sent-foreground/70" : "text-message-received-foreground/70"}`}>
-                  {new Date(message.created_at).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </p>
-              </div>
-            </div>
+            <MessageItem key={message.id} message={message} isSent={isSent} />
           );
         })}
+        <div ref={messagesEndRef} />
       </div>
 
       <form onSubmit={sendMessage} className="bg-card border-t border-border p-4">
         <div className="flex gap-2">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="hidden"
+          />
+          <Button
+            type="button"
+            variant="secondary"
+            size="icon"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+          >
+            <ImageIcon className="w-5 h-5" />
+          </Button>
+          <AudioRecorder onAudioRecorded={handleAudioRecorded} />
           <Input
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}

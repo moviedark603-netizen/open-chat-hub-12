@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MessageSquare, MapPin } from "lucide-react";
+import ConnectionActions from "./ConnectionActions";
 
 interface ProfileCardProps {
   profile: {
@@ -15,9 +16,10 @@ interface ProfileCardProps {
     gender: string;
     location: string;
   };
+  currentProfileId: string;
 }
 
-const ProfileCard = ({ profile }: ProfileCardProps) => {
+const ProfileCard = ({ profile, currentProfileId }: ProfileCardProps) => {
   const navigate = useNavigate();
 
   return (
@@ -43,13 +45,16 @@ const ProfileCard = ({ profile }: ProfileCardProps) => {
             </div>
           </div>
         </div>
-        <Button
-          onClick={() => navigate(`/messages/${profile.id}`)}
-          className="w-full"
-        >
-          <MessageSquare className="w-4 h-4 mr-2" />
-          Send Message
-        </Button>
+        <div className="space-y-2">
+          <ConnectionActions profileId={profile.id} currentProfileId={currentProfileId} />
+          <Button
+            onClick={() => navigate(`/messages/${profile.id}`)}
+            className="w-full"
+          >
+            <MessageSquare className="w-4 h-4 mr-2" />
+            Send Message
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );

@@ -19,6 +19,8 @@ export type Database = {
           content: string
           created_at: string | null
           id: string
+          media_url: string | null
+          message_type: string | null
           receiver_id: string
           sender_id: string
         }
@@ -26,6 +28,8 @@ export type Database = {
           content: string
           created_at?: string | null
           id?: string
+          media_url?: string | null
+          message_type?: string | null
           receiver_id: string
           sender_id: string
         }
@@ -33,6 +37,8 @@ export type Database = {
           content?: string
           created_at?: string | null
           id?: string
+          media_url?: string | null
+          message_type?: string | null
           receiver_id?: string
           sender_id?: string
         }
@@ -79,6 +85,48 @@ export type Database = {
           {
             foreignKeyName: "photos_profile_id_fkey"
             columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profile_connections: {
+        Row: {
+          created_at: string | null
+          id: string
+          receiver_id: string
+          requester_id: string
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          receiver_id: string
+          requester_id: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          receiver_id?: string
+          requester_id?: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_connections_receiver_id_fkey"
+            columns: ["receiver_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profile_connections_requester_id_fkey"
+            columns: ["requester_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
