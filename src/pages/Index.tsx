@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import ProfileCard from "@/components/ProfileCard";
 import PhotoUpload from "@/components/PhotoUpload";
 import PhotoGallery from "@/components/PhotoGallery";
-import { LogOut, MessageSquare, User } from "lucide-react";
+import { LogOut, MessageSquare, User, Shield } from "lucide-react";
 import { toast } from "sonner";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 import {
   Dialog,
   DialogContent,
@@ -43,6 +44,7 @@ const Index = () => {
     photo: null as File | null,
   });
   const navigate = useNavigate();
+  const { isAdmin } = useIsAdmin();
 
   useEffect(() => {
     checkAuth();
@@ -175,6 +177,16 @@ const Index = () => {
             <h1 className="text-2xl font-bold text-card-foreground">OTHERS</h1>
           </div>
           <div className="flex items-center gap-2">
+            {isAdmin && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate("/admin")}
+                title="Admin Dashboard"
+              >
+                <Shield className="w-5 h-5" />
+              </Button>
+            )}
             <Button
               variant="ghost"
               size="icon"
