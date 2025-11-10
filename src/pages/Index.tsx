@@ -5,9 +5,11 @@ import { Button } from "@/components/ui/button";
 import ProfileCard from "@/components/ProfileCard";
 import PhotoUpload from "@/components/PhotoUpload";
 import PhotoGallery from "@/components/PhotoGallery";
-import { LogOut, MessageSquare, User, Shield } from "lucide-react";
+import { LogOut, MessageSquare, User, Shield, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
+import { useMessageNotifications } from "@/hooks/useMessageNotifications";
+import MobileNav from "@/components/MobileNav";
 import {
   Dialog,
   DialogContent,
@@ -45,6 +47,7 @@ const Index = () => {
   });
   const navigate = useNavigate();
   const { isAdmin } = useIsAdmin();
+  const { unreadCount } = useMessageNotifications(currentProfile?.id || null);
 
   useEffect(() => {
     checkAuth();
@@ -161,22 +164,23 @@ const Index = () => {
       toast.success("Profile updated successfully!");
       setShowProfileDialog(false);
       checkAuth();
+      fetchProfiles(); // Refetch profiles based on new location
     } catch (error: any) {
       toast.error(error.message || "Error updating profile");
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-secondary to-background">
-      <header className="bg-card border-b border-border shadow-soft">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+    <div className="min-h-screen bg-gradient-to-br from-background via-secondary to-background pb-20 md:pb-0">
+      <header className="bg-card border-b border-border shadow-soft sticky top-0 z-40">
+        <div className="container mx-auto px-4 py-3 md:py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="bg-primary rounded-full p-2">
-              <MessageSquare className="w-6 h-6 text-primary-foreground" />
+            <div className="bg-primary rounded-full p-1.5 md:p-2">
+              <MessageSquare className="w-5 h-5 md:w-6 md:h-6 text-primary-foreground" />
             </div>
-            <h1 className="text-2xl font-bold text-card-foreground">OTHERS</h1>
+            <h1 className="text-xl md:text-2xl font-bold text-card-foreground">OTHERS</h1>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="hidden md:flex items-center gap-2">
             {isAdmin && (
               <Button
                 variant="ghost"
@@ -198,19 +202,44 @@ const Index = () => {
               <LogOut className="w-5 h-5" />
             </Button>
           </div>
+          <div className="flex md:hidden items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setShowProfileDialog(true)}
+            >
+              <User className="w-5 h-5" />
+            </Button>
+            <Button variant="ghost" size="icon" onClick={handleLogout}>
+              <LogOut className="w-5 h-5" />
+            </Button>
+          </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-foreground mb-2">Discover People Near You</h2>
-          <p className="text-muted-foreground">
-            {currentProfile?.location ? `Showing profiles in ${currentProfile.location}` : "Complete your profile to see matches"}
-          </p>
+      <main className="container mx-auto px-4 py-4 md:py-8">
+        <div className="mb-4 md:mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">Discover People Near You</h2>
+          <div className="flex items-center gap-2 text-sm md:text-base text-muted-foreground">
+            <MapPin className="w-4 h-4" />
+            <span>
+              {currentProfile?.location ? `${currentProfile.location}` : "Complete your profile to see matches"}
+            </span>
+            {currentProfile?.location && (
+              <Button
+                variant="link"
+                size="sm"
+                className="h-auto p-0 text-primary"
+                onClick={() => setShowProfileDialog(true)}
+              >
+                Change
+              </Button>
+            )}
+          </div>
         </div>
 
         {currentProfile && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 mb-4 md:mb-8">
             <div className="lg:col-span-2">
               <PhotoGallery profileId={currentProfile.id} refresh={photoRefresh} />
             </div>
@@ -223,24 +252,26 @@ const Index = () => {
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {profiles.map((profile) => (
             <ProfileCard key={profile.id} profile={profile} currentProfileId={currentProfile?.id || ""} />
           ))}
         </div>
 
         {profiles.length === 0 && (
-          <div className="text-center py-16">
-            <MessageSquare className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-            <p className="text-xl text-muted-foreground">
+          <div className="text-center py-12 md:py-16">
+            <MessageSquare className="w-12 h-12 md:w-16 md:h-16 mx-auto text-muted-foreground mb-4" />
+            <p className="text-lg md:text-xl text-muted-foreground px-4">
               No matches in your area yet. Check back soon!
             </p>
           </div>
         )}
       </main>
 
+      <MobileNav isAdmin={isAdmin} unreadCount={unreadCount} />
+
       <Dialog open={showProfileDialog} onOpenChange={setShowProfileDialog}>
-        <DialogContent>
+        <DialogContent className="max-w-[95vw] md:max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Complete Your Profile</DialogTitle>
             <DialogDescription>

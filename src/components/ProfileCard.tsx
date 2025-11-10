@@ -24,24 +24,24 @@ const ProfileCard = ({ profile, currentProfileId }: ProfileCardProps) => {
 
   return (
     <Card className="overflow-hidden hover:shadow-medium transition-shadow">
-      <CardContent className="p-6">
-        <div className="flex items-center gap-4 mb-4">
-          <Avatar className="w-16 h-16">
+      <CardContent className="p-4 md:p-6">
+        <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-4">
+          <Avatar className="w-12 h-12 md:w-16 md:h-16 shrink-0">
             <AvatarImage src={profile.photo_url || ""} />
-            <AvatarFallback className="bg-primary text-primary-foreground text-xl">
+            <AvatarFallback className="bg-primary text-primary-foreground text-lg md:text-xl">
               {profile.name.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2">
-              <h3 className="font-semibold text-lg text-card-foreground">{profile.name}</h3>
-              <Badge variant="secondary" className="text-xs capitalize">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1 md:mb-2">
+              <h3 className="font-semibold text-base md:text-lg text-card-foreground truncate">{profile.name}</h3>
+              <Badge variant="secondary" className="text-xs capitalize shrink-0">
                 {profile.gender}
               </Badge>
             </div>
-            <div className="flex items-center gap-1 text-sm text-muted-foreground">
-              <MapPin className="w-3 h-3" />
-              <span>{profile.location}</span>
+            <div className="flex items-center gap-1 text-xs md:text-sm text-muted-foreground">
+              <MapPin className="w-3 h-3 shrink-0" />
+              <span className="truncate">{profile.location}</span>
             </div>
           </div>
         </div>
@@ -50,6 +50,7 @@ const ProfileCard = ({ profile, currentProfileId }: ProfileCardProps) => {
           <Button
             onClick={() => navigate(`/messages/${profile.id}`)}
             className="w-full"
+            size="sm"
           >
             <MessageSquare className="w-4 h-4 mr-2" />
             Send Message

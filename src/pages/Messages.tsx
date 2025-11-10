@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import AudioRecorder from "@/components/AudioRecorder";
 import MessageItem from "@/components/MessageItem";
+import { useMessageNotifications } from "@/hooks/useMessageNotifications";
 
 const messageSchema = z.object({
   content: z.string().trim().max(1000, "Message too long"),
@@ -40,6 +41,7 @@ const Messages = () => {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { resetUnreadCount } = useMessageNotifications(currentProfile?.id || null);
 
   useEffect(() => {
     const fetchProfiles = async () => {
@@ -72,6 +74,7 @@ const Messages = () => {
 
     fetchProfiles();
     fetchMessages();
+    resetUnreadCount(); // Clear notifications when viewing messages
 
     const channel = supabase
       .channel("messages")
@@ -246,26 +249,27 @@ const Messages = () => {
 
   return (
     <div className="flex flex-col h-screen bg-background">
-      <div className="bg-card border-b border-border p-4 flex items-center gap-3 shadow-soft">
+      <div className="bg-card border-b border-border p-3 md:p-4 flex items-center gap-3 shadow-soft sticky top-0 z-40">
         <Button
           variant="ghost"
           size="icon"
           onClick={() => navigate("/")}
+          className="shrink-0"
         >
           <ArrowLeft className="w-5 h-5" />
         </Button>
-        <Avatar className="w-10 h-10">
+        <Avatar className="w-9 h-9 md:w-10 md:h-10 shrink-0">
           <AvatarImage src={otherProfile?.photo_url || ""} />
           <AvatarFallback className="bg-primary text-primary-foreground">
             {otherProfile?.name.charAt(0).toUpperCase()}
           </AvatarFallback>
         </Avatar>
-        <div>
-          <h2 className="font-semibold text-card-foreground">{otherProfile?.name}</h2>
+        <div className="min-w-0 flex-1">
+          <h2 className="font-semibold text-card-foreground truncate">{otherProfile?.name}</h2>
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-3 md:space-y-4">
         {messages.map((message) => {
           const isSent = message.sender_id === currentProfile?.id;
           return (
@@ -275,8 +279,8 @@ const Messages = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      <form onSubmit={sendMessage} className="bg-card border-t border-border p-4">
-        <div className="flex gap-2">
+      <form onSubmit={sendMessage} className="bg-card border-t border-border p-3 md:p-4">
+        <div className="flex gap-2 items-end">
           <input
             ref={fileInputRef}
             type="file"
@@ -290,18 +294,24 @@ const Messages = () => {
             size="icon"
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
+            className="shrink-0"
           >
-            <ImageIcon className="w-5 h-5" />
+            <ImageIcon className="w-4 h-4 md:w-5 md:h-5" />
           </Button>
           <AudioRecorder onAudioRecorded={handleAudioRecorded} />
           <Input
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             placeholder="Type a message..."
-            className="flex-1"
+            className="flex-1 min-w-0"
           />
-          <Button type="submit" size="icon" disabled={loading || !newMessage.trim()}>
-            <Send className="w-5 h-5" />
+          <Button 
+            type="submit" 
+            size="icon" 
+            disabled={loading || !newMessage.trim()}
+            className="shrink-0"
+          >
+            <Send className="w-4 h-4 md:w-5 md:h-5" />
           </Button>
         </div>
       </form>
