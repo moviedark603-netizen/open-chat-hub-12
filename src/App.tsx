@@ -8,6 +8,8 @@ import Auth from "./pages/Auth";
 import Messages from "./pages/Messages";
 import Admin from "./pages/Admin";
 import Profile from "./pages/Profile";
+import Community from "./pages/Community";
+import PostDetails from "./pages/PostDetails";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +26,8 @@ const App = () => (
           <Route path="/messages/:profileId" element={<Messages />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/community" element={<Community />} />
+          <Route path="/post/:postId" element={<PostDetails />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

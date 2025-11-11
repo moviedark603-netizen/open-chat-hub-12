@@ -91,6 +91,86 @@ export type Database = {
           },
         ]
       }
+      post_replies: {
+        Row: {
+          author_id: string
+          content: string
+          created_at: string
+          id: string
+          media_url: string | null
+          post_id: string
+          reply_type: string
+        }
+        Insert: {
+          author_id: string
+          content: string
+          created_at?: string
+          id?: string
+          media_url?: string | null
+          post_id: string
+          reply_type?: string
+        }
+        Update: {
+          author_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          media_url?: string | null
+          post_id?: string
+          reply_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_replies_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "post_replies_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      posts: {
+        Row: {
+          author_id: string
+          content: string
+          created_at: string
+          id: string
+          media_url: string | null
+          post_type: string
+        }
+        Insert: {
+          author_id: string
+          content: string
+          created_at?: string
+          id?: string
+          media_url?: string | null
+          post_type?: string
+        }
+        Update: {
+          author_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          media_url?: string | null
+          post_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "posts_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profile_connections: {
         Row: {
           created_at: string | null
