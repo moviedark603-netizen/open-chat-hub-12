@@ -273,7 +273,13 @@ const Messages = () => {
         {messages.map((message) => {
           const isSent = message.sender_id === currentProfile?.id;
           return (
-            <MessageItem key={message.id} message={message} isSent={isSent} />
+            <MessageItem 
+              key={message.id} 
+              message={message} 
+              isSent={isSent}
+              senderName={otherProfile?.name}
+              senderPhoto={otherProfile?.photo_url}
+            />
           );
         })}
         <div ref={messagesEndRef} />

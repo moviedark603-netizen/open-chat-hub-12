@@ -1,5 +1,6 @@
 import { Image as ImageIcon, Volume2 } from "lucide-react";
 import { useState, useRef } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface MessageItemProps {
   message: {
@@ -11,9 +12,11 @@ interface MessageItemProps {
     sender_id: string;
   };
   isSent: boolean;
+  senderName?: string;
+  senderPhoto?: string | null;
 }
 
-const MessageItem = ({ message, isSent }: MessageItemProps) => {
+const MessageItem = ({ message, isSent, senderName, senderPhoto }: MessageItemProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -30,7 +33,15 @@ const MessageItem = ({ message, isSent }: MessageItemProps) => {
   };
 
   return (
-    <div className={`flex ${isSent ? "justify-end" : "justify-start"}`}>
+    <div className={`flex gap-2 ${isSent ? "justify-end" : "justify-start"}`}>
+      {!isSent && (
+        <Avatar className="w-8 h-8 shrink-0 mt-1">
+          <AvatarImage src={senderPhoto || ""} />
+          <AvatarFallback className="bg-primary/10 text-primary text-xs">
+            {senderName?.charAt(0).toUpperCase() || "U"}
+          </AvatarFallback>
+        </Avatar>
+      )}
       <div
         className={`max-w-xs md:max-w-md px-4 py-2 rounded-2xl ${
           isSent

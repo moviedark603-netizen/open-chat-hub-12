@@ -8,6 +8,7 @@ import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { useMessageNotifications } from "@/hooks/useMessageNotifications";
 import MobileNav from "@/components/MobileNav";
 import RecentMessages from "@/components/RecentMessages";
+import RecentlyJoined from "@/components/RecentlyJoined";
 
 interface Profile {
   id: string;
@@ -138,9 +139,14 @@ const Index = () => {
 
       <main className="container mx-auto px-4 py-4 md:py-8">
         {currentProfile && (
-          <div className="mb-6">
-            <RecentMessages currentProfileId={currentProfile.id} />
-          </div>
+          <>
+            <div className="mb-6">
+              <RecentMessages currentProfileId={currentProfile.id} />
+            </div>
+            <div className="mb-6">
+              <RecentlyJoined currentProfileId={currentProfile.id} />
+            </div>
+          </>
         )}
 
         <div className="mb-4 md:mb-6">
