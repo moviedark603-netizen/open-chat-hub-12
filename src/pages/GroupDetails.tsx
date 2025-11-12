@@ -142,31 +142,33 @@ export default function GroupDetails() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-4 md:p-6 pb-20 md:pb-6">
       <div className="max-w-4xl mx-auto">
         <Button
           variant="ghost"
+          size="sm"
           onClick={() => navigate("/groups")}
-          className="mb-6"
+          className="mb-4 md:mb-6"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Groups
         </Button>
 
-        <Card className="p-6 mb-6">
-          <div className="flex items-start justify-between">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">{group?.name}</h1>
+        <Card className="p-4 md:p-6 mb-4 md:mb-6">
+          <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-2xl md:text-3xl font-bold mb-2">{group?.name}</h1>
               {group?.description && (
-                <p className="text-muted-foreground">{group.description}</p>
+                <p className="text-sm md:text-base text-muted-foreground">{group.description}</p>
               )}
             </div>
             {isAdmin && (
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                  <Button>
+                  <Button size="sm" className="w-full sm:w-auto">
                     <UserPlus className="mr-2 h-4 w-4" />
-                    Add Member
+                    <span className="hidden sm:inline">Add Member</span>
+                    <span className="sm:hidden">Add</span>
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
@@ -203,41 +205,45 @@ export default function GroupDetails() {
           </div>
         </Card>
 
-        <h2 className="text-2xl font-bold mb-4">Members</h2>
-        <div className="space-y-3">
+        <h2 className="text-xl md:text-2xl font-bold mb-3 md:mb-4">Members</h2>
+        <div className="space-y-2 md:space-y-3">
           {members?.map((member) => (
-            <Card key={member.id} className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Avatar>
+            <Card key={member.id} className="p-3 md:p-4">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
+                  <Avatar className="h-10 w-10 md:h-12 md:w-12">
                     <AvatarImage src={member.profile?.photo_url || ""} />
                     <AvatarFallback>
                       {member.profile?.name?.charAt(0) || "U"}
                     </AvatarFallback>
                   </Avatar>
-                  <div>
-                    <p className="font-semibold">{member.profile?.name}</p>
-                    <p className="text-sm text-muted-foreground flex items-center gap-1">
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-sm md:text-base truncate">{member.profile?.name}</p>
+                    <p className="text-xs md:text-sm text-muted-foreground flex items-center gap-1">
                       {member.role === "admin" && <Crown className="h-3 w-3" />}
                       {member.role}
                     </p>
                   </div>
                 </div>
                 {isAdmin && member.profile_id !== currentProfile?.id && (
-                  <div className="flex gap-2">
+                  <div className="flex gap-1 md:gap-2 flex-shrink-0">
                     <Button
                       variant="outline"
                       size="sm"
+                      className="h-8 w-8 p-0"
                       onClick={() => handleToggleAdmin(member.id, member.role)}
+                      title="Toggle admin"
                     >
-                      <Crown className="h-4 w-4" />
+                      <Crown className="h-3 w-3 md:h-4 md:w-4" />
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
+                      className="h-8 w-8 p-0"
                       onClick={() => handleRemoveMember(member.id)}
+                      title="Remove member"
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Trash2 className="h-3 w-3 md:h-4 md:w-4" />
                     </Button>
                   </div>
                 )}

@@ -81,15 +81,16 @@ export default function Groups() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-4 md:p-6 pb-20 md:pb-6">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold">Groups</h1>
+        <div className="flex items-center justify-between mb-6 md:mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold">Groups</h1>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <Button>
+              <Button size="sm" className="md:h-10">
                 <Plus className="mr-2 h-4 w-4" />
-                Create Group
+                <span className="hidden sm:inline">Create Group</span>
+                <span className="sm:hidden">Create</span>
               </Button>
             </DialogTrigger>
             <DialogContent>
@@ -128,22 +129,22 @@ export default function Groups() {
           </Dialog>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-3 md:gap-4 sm:grid-cols-2">
           {groups?.map((group) => (
             <Card
               key={group.id}
-              className="p-6 cursor-pointer hover:shadow-lg transition-shadow"
+              className="p-4 md:p-6 cursor-pointer hover:shadow-lg transition-shadow active:scale-95"
               onClick={() => navigate(`/groups/${group.id}`)}
             >
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="text-xl font-semibold mb-1">{group.name}</h3>
+              <div className="flex items-start justify-between mb-3 md:mb-4">
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-lg md:text-xl font-semibold mb-1 truncate">{group.name}</h3>
                   {group.description && (
-                    <p className="text-sm text-muted-foreground">{group.description}</p>
+                    <p className="text-sm text-muted-foreground line-clamp-2">{group.description}</p>
                   )}
                 </div>
               </div>
-              <div className="flex items-center justify-between text-sm text-muted-foreground">
+              <div className="flex items-center justify-between text-xs md:text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <Users className="h-4 w-4" />
                   <span>{group.group_members?.length || 0} members</span>
