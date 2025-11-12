@@ -14,6 +14,80 @@ export type Database = {
   }
   public: {
     Tables: {
+      group_members: {
+        Row: {
+          group_id: string
+          id: string
+          joined_at: string
+          profile_id: string
+          role: string
+        }
+        Insert: {
+          group_id: string
+          id?: string
+          joined_at?: string
+          profile_id: string
+          role?: string
+        }
+        Update: {
+          group_id?: string
+          id?: string
+          joined_at?: string
+          profile_id?: string
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_members_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      groups: {
+        Row: {
+          created_at: string
+          creator_id: string
+          description: string | null
+          id: string
+          name: string
+          photo_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          creator_id: string
+          description?: string | null
+          id?: string
+          name: string
+          photo_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          creator_id?: string
+          description?: string | null
+          id?: string
+          name?: string
+          photo_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "groups_creator_id_fkey"
+            columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       messages: {
         Row: {
           content: string

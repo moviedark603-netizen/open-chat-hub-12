@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { Home, MessageSquare, User, Shield, Users } from "lucide-react";
+import { Home, MessageSquare, User, Shield, Users, UsersRound } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface MobileNavProps {
@@ -14,6 +14,7 @@ const MobileNav = ({ isAdmin, unreadCount }: MobileNavProps) => {
   const navItems = [
     { icon: Home, label: "Discover", path: "/" },
     { icon: Users, label: "Community", path: "/community" },
+    { icon: UsersRound, label: "Groups", path: "/groups" },
     { icon: User, label: "Profile", path: "/profile" },
   ];
 

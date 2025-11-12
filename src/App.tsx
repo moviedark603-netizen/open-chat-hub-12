@@ -10,6 +10,8 @@ import Admin from "./pages/Admin";
 import Profile from "./pages/Profile";
 import Community from "./pages/Community";
 import PostDetails from "./pages/PostDetails";
+import Groups from "./pages/Groups";
+import GroupDetails from "./pages/GroupDetails";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +30,8 @@ const App = () => (
           <Route path="/profile" element={<Profile />} />
           <Route path="/community" element={<Community />} />
           <Route path="/post/:postId" element={<PostDetails />} />
+          <Route path="/groups" element={<Groups />} />
+          <Route path="/groups/:groupId" element={<GroupDetails />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
