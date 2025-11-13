@@ -23,38 +23,56 @@ const ProfileCard = ({ profile, currentProfileId }: ProfileCardProps) => {
   const navigate = useNavigate();
 
   return (
-    <Card className="overflow-hidden hover:shadow-medium transition-shadow">
-      <CardContent className="p-4 md:p-6">
-        <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-4">
-          <Avatar className="w-12 h-12 md:w-16 md:h-16 shrink-0">
-            <AvatarImage src={profile.photo_url || ""} />
-            <AvatarFallback className="bg-primary text-primary-foreground text-lg md:text-xl">
-              {profile.name.charAt(0).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1 md:mb-2">
-              <h3 className="font-semibold text-base md:text-lg text-card-foreground truncate">{profile.name}</h3>
-              <Badge variant="secondary" className="text-xs capitalize shrink-0">
-                {profile.gender}
-              </Badge>
+    <Card className="group overflow-hidden hover:shadow-strong transition-all duration-300 hover:-translate-y-1 border-border">
+      <CardContent className="p-0">
+        {/* Profile Image */}
+        <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-primary/10 to-accent/10">
+          {profile.photo_url ? (
+            <img 
+              src={profile.photo_url} 
+              alt={profile.name}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <div className="bg-gradient-to-br from-primary to-accent rounded-full w-24 h-24 flex items-center justify-center">
+                <span className="text-4xl font-bold text-primary-foreground">
+                  {profile.name.charAt(0).toUpperCase()}
+                </span>
+              </div>
             </div>
-            <div className="flex items-center gap-1 text-xs md:text-sm text-muted-foreground">
-              <MapPin className="w-3 h-3 shrink-0" />
+          )}
+          <div className="absolute top-3 right-3">
+            <Badge variant="secondary" className="text-xs capitalize backdrop-blur-sm bg-card/90">
+              {profile.gender}
+            </Badge>
+          </div>
+        </div>
+
+        {/* Profile Info */}
+        <div className="p-4 space-y-3">
+          <div>
+            <h3 className="font-bold text-lg text-card-foreground mb-1 truncate">
+              {profile.name}
+            </h3>
+            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+              <MapPin className="w-3.5 h-3.5 shrink-0 text-primary" />
               <span className="truncate">{profile.location}</span>
             </div>
           </div>
-        </div>
-        <div className="space-y-2">
-          <ConnectionActions profileId={profile.id} currentProfileId={currentProfileId} />
-          <Button
-            onClick={() => navigate(`/messages/${profile.id}`)}
-            className="w-full"
-            size="sm"
-          >
-            <MessageSquare className="w-4 h-4 mr-2" />
-            Send Message
-          </Button>
+
+          {/* Actions */}
+          <div className="space-y-2 pt-2">
+            <ConnectionActions profileId={profile.id} currentProfileId={currentProfileId} />
+            <Button
+              onClick={() => navigate(`/messages/${profile.id}`)}
+              className="w-full bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90"
+              size="sm"
+            >
+              <MessageSquare className="w-4 h-4 mr-2" />
+              Send Message
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
