@@ -37,23 +37,20 @@ const Index = () => {
   const checkAuth = async () => {
     const { data: { session } } = await supabase.auth.getSession();
     
-    if (!session) {
-      navigate("/auth");
-      return;
-    }
+    if (session) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("user_id", session.user.id)
+        .single();
 
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("user_id", session.user.id)
-      .single();
-
-    if (profile) {
-      setCurrentProfile(profile);
-      
-      // Check if profile is incomplete and redirect to profile page
-      if (!profile.name || !profile.mobile_number || !profile.gender || !profile.location) {
-        navigate("/profile");
+      if (profile) {
+        setCurrentProfile(profile);
+        
+        // Check if profile is incomplete and redirect to profile page
+        if (!profile.name || !profile.mobile_number || !profile.gender || !profile.location) {
+          navigate("/profile");
+        }
       }
     }
   };
@@ -149,13 +146,32 @@ const Index = () => {
             <p className="text-base md:text-xl text-muted-foreground mb-6 md:mb-8">
               Connect with people near you who share your interests and values
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6">
-              <div className="flex items-center gap-2 text-sm md:text-base text-muted-foreground bg-card px-4 py-2 rounded-full border border-border">
-                <MapPin className="w-4 h-4 text-primary" />
-                <span className="font-medium">
-                  {currentProfile?.location || "Set your location"}
-                </span>
-                {currentProfile?.location && (
+            
+            {!currentProfile ? (
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <Button 
+                  size="lg" 
+                  onClick={() => navigate("/auth")}
+                  className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-lg px-8"
+                >
+                  Sign Up Free
+                </Button>
+                <Button 
+                  size="lg" 
+                  variant="outline"
+                  onClick={() => navigate("/auth")}
+                  className="text-lg px-8"
+                >
+                  Sign In
+                </Button>
+              </div>
+            ) : (
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6">
+                <div className="flex items-center gap-2 text-sm md:text-base text-muted-foreground bg-card px-4 py-2 rounded-full border border-border">
+                  <MapPin className="w-4 h-4 text-primary" />
+                  <span className="font-medium">
+                    {currentProfile.location}
+                  </span>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -164,23 +180,24 @@ const Index = () => {
                   >
                     Change
                   </Button>
-                )}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </section>
 
       <main className="container mx-auto px-4 py-6 md:py-10">
+        {/* Recently Joined Section - Always Visible */}
+        <div className="mb-8">
+          <RecentlyJoined currentProfileId={currentProfile?.id || null} />
+        </div>
+
+        {/* Recent Messages - Only for logged in users */}
         {currentProfile && (
-          <>
-            <div className="mb-8">
-              <RecentMessages currentProfileId={currentProfile.id} />
-            </div>
-            <div className="mb-8">
-              <RecentlyJoined currentProfileId={currentProfile.id} />
-            </div>
-          </>
+          <div className="mb-8">
+            <RecentMessages currentProfileId={currentProfile.id} />
+          </div>
         )}
 
         {/* Main Content */}
@@ -195,10 +212,25 @@ const Index = () => {
           </div>
         </div>
 
-        {profiles.length > 0 ? (
+        {!currentProfile ? (
+          <div className="text-center py-16 md:py-24">
+            <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-full w-20 h-20 md:w-24 md:h-24 flex items-center justify-center mx-auto mb-6">
+              <MessageSquare className="w-10 h-10 md:w-12 md:h-12 text-primary" />
+            </div>
+            <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2">
+              Join OTHERS Today
+            </h3>
+            <p className="text-base md:text-lg text-muted-foreground px-4 mb-6">
+              Sign up to discover amazing people near you and start meaningful connections
+            </p>
+            <Button onClick={() => navigate("/auth")} size="lg" className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90">
+              Get Started Free
+            </Button>
+          </div>
+        ) : profiles.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
             {profiles.map((profile) => (
-              <ProfileCard key={profile.id} profile={profile} currentProfileId={currentProfile?.id || ""} />
+              <ProfileCard key={profile.id} profile={profile} currentProfileId={currentProfile.id} />
             ))}
           </div>
         ) : (
@@ -210,11 +242,11 @@ const Index = () => {
               No matches yet
             </h3>
             <p className="text-base md:text-lg text-muted-foreground px-4 mb-6">
-              {currentProfile?.location 
+              {currentProfile.location 
                 ? "Be the first in your area! Check back soon for new members."
                 : "Complete your profile to start discovering people near you."}
             </p>
-            {!currentProfile?.location && (
+            {!currentProfile.location && (
               <Button onClick={() => navigate("/profile")} size="lg">
                 Complete Profile
               </Button>

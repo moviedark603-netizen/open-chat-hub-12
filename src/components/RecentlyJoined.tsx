@@ -17,7 +17,7 @@ interface Profile {
 }
 
 interface RecentlyJoinedProps {
-  currentProfileId: string;
+  currentProfileId: string | null;
 }
 
 const RecentlyJoined = ({ currentProfileId }: RecentlyJoinedProps) => {
@@ -25,8 +25,6 @@ const RecentlyJoined = ({ currentProfileId }: RecentlyJoinedProps) => {
   const [recentProfiles, setRecentProfiles] = useState<Profile[]>([]);
 
   useEffect(() => {
-    if (!currentProfileId) return;
-    
     fetchRecentlyJoined();
 
     const channel = supabase
@@ -50,12 +48,18 @@ const RecentlyJoined = ({ currentProfileId }: RecentlyJoinedProps) => {
   }, [currentProfileId]);
 
   const fetchRecentlyJoined = async () => {
-    const { data: profiles } = await supabase
+    let query = supabase
       .from("profiles")
       .select("*")
-      .neq("id", currentProfileId)
       .order("created_at", { ascending: false })
       .limit(6);
+
+    // Exclude current profile if logged in
+    if (currentProfileId) {
+      query = query.neq("id", currentProfileId);
+    }
+
+    const { data: profiles } = await query;
 
     if (profiles) {
       setRecentProfiles(profiles);
@@ -77,7 +81,7 @@ const RecentlyJoined = ({ currentProfileId }: RecentlyJoinedProps) => {
           {recentProfiles.map((profile) => (
             <div
               key={profile.id}
-              onClick={() => navigate(`/messages/${profile.id}`)}
+              onClick={() => currentProfileId ? navigate(`/messages/${profile.id}`) : navigate("/auth")}
               className="flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-muted cursor-pointer transition-all hover:scale-105"
             >
               <Avatar className="w-16 h-16 ring-2 ring-primary/20">
