@@ -95,6 +95,20 @@ const PostItem = ({ post, currentProfileId }: PostItemProps) => {
               />
             </div>
           )}
+
+          {post.post_type === "video" && post.media_url && (
+            <div className="space-y-2">
+              <video
+                src={post.media_url}
+                controls
+                className="rounded-lg w-full max-h-96 object-contain bg-muted"
+                preload="metadata"
+              />
+              {post.content && (
+                <p className="text-sm break-words">{post.content}</p>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Actions */}

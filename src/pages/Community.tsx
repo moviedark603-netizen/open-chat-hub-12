@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ArrowLeft, Send, Image as ImageIcon, MessageSquare } from "lucide-react";
+import { ArrowLeft, Send, Image as ImageIcon, MessageSquare, Video, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 import AudioRecorder from "@/components/AudioRecorder";
@@ -43,7 +43,9 @@ const Community = () => {
   const [currentProfile, setCurrentProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [videoUploading, setVideoUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     checkAuth();
@@ -239,6 +241,62 @@ const Community = () => {
     }
   };
 
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !currentProfile) return;
+
+    if (!file.type.startsWith("video/")) {
+      toast.error("Please select a video file");
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("Video must be less than 10MB");
+      return;
+    }
+
+    try {
+      setVideoUploading(true);
+
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("videos")
+        .upload(fileName, file, {
+          cacheControl: "3600",
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from("videos")
+        .getPublicUrl(fileName);
+
+      const { error } = await supabase.from("posts").insert({
+        author_id: currentProfile.id,
+        content: newPost || "",
+        post_type: "video",
+        media_url: publicUrl,
+      });
+
+      if (error) throw error;
+
+      setNewPost("");
+      toast.success("Video posted!");
+    } catch (error: any) {
+      toast.error(error.message || "Error uploading video");
+    } finally {
+      setVideoUploading(false);
+      if (videoInputRef.current) {
+        videoInputRef.current.value = "";
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary to-background pb-20 md:pb-8">
       <header className="bg-card border-b border-border shadow-soft sticky top-0 z-40">
@@ -283,15 +341,38 @@ const Community = () => {
                   onChange={handleImageUpload}
                   className="hidden"
                 />
+                <input
+                  ref={videoInputRef}
+                  type="file"
+                  accept="video/*"
+                  onChange={handleVideoUpload}
+                  className="hidden"
+                />
                 <Button
                   type="button"
                   variant="secondary"
                   size="icon"
                   onClick={() => fileInputRef.current?.click()}
-                  disabled={uploading}
+                  disabled={uploading || videoUploading}
                   className="shrink-0"
+                  title="Upload image"
                 >
                   <ImageIcon className="w-4 h-4 md:w-5 md:h-5" />
+                </Button>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="icon"
+                  onClick={() => videoInputRef.current?.click()}
+                  disabled={uploading || videoUploading}
+                  className="shrink-0"
+                  title="Upload video (max 10MB)"
+                >
+                  {videoUploading ? (
+                    <Loader2 className="w-4 h-4 md:w-5 md:h-5 animate-spin" />
+                  ) : (
+                    <Video className="w-4 h-4 md:w-5 md:h-5" />
+                  )}
                 </Button>
                 <AudioRecorder onAudioRecorded={handleAudioRecorded} />
                 <Input
