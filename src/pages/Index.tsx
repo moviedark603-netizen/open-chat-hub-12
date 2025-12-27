@@ -215,6 +215,13 @@ const Index = () => {
         </div>
       </header>
 
+      {/* Recently Joined Section - Top */}
+      <section className="bg-background border-b border-border py-4">
+        <div className="container mx-auto px-4">
+          <RecentlyJoined currentProfileId={currentProfile?.id || null} />
+        </div>
+      </section>
+
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-accent/5 to-secondary border-b border-border">
         <div className="container mx-auto px-4 py-12 md:py-20">
@@ -427,11 +434,6 @@ const Index = () => {
       </section>
 
       <main className="container mx-auto px-4 py-6 md:py-10">
-        {/* Recently Joined Section */}
-        <div className="mb-8">
-          <RecentlyJoined currentProfileId={currentProfile?.id || null} />
-        </div>
-
         {/* Recent Messages - Only for logged in users */}
         {currentProfile && (
           <div className="mb-8">
