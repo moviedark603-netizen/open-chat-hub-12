@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ArrowLeft, LogOut } from "lucide-react";
+import GiftPointsBadge from "@/components/GiftPointsBadge";
 import { toast } from "sonner";
 import PhotoUpload from "@/components/PhotoUpload";
 import PhotoGallery from "@/components/PhotoGallery";
@@ -22,6 +23,7 @@ interface Profile {
   user_id: string;
   gender: string;
   location: string;
+  gift_points: number;
 }
 
 const Profile = () => {
@@ -156,13 +158,14 @@ const Profile = () => {
             <div className="bg-card rounded-lg p-6 shadow-soft">
               <h2 className="text-xl font-semibold mb-4">Profile Information</h2>
               <form onSubmit={updateProfile} className="space-y-4">
-                <div className="flex justify-center mb-4">
+                <div className="flex flex-col items-center mb-4 gap-3">
                   <Avatar className="w-24 h-24">
                     <AvatarImage src={currentProfile?.photo_url || ""} />
                     <AvatarFallback className="bg-primary text-primary-foreground text-3xl">
                       {profileForm.name.charAt(0).toUpperCase() || "U"}
                     </AvatarFallback>
                   </Avatar>
+                  <GiftPointsBadge points={currentProfile?.gift_points || 0} />
                 </div>
                 
                 <div className="space-y-2">

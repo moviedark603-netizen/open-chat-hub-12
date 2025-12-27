@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      gift_transactions: {
+        Row: {
+          created_at: string
+          id: string
+          message: string | null
+          points: number
+          receiver_id: string
+          sender_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message?: string | null
+          points: number
+          receiver_id: string
+          sender_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string | null
+          points?: number
+          receiver_id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gift_transactions_receiver_id_fkey"
+            columns: ["receiver_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gift_transactions_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       group_members: {
         Row: {
           group_id: string
@@ -292,6 +334,7 @@ export type Database = {
           created_at: string | null
           email: string
           gender: string | null
+          gift_points: number
           id: string
           location: string | null
           mobile_number: string
@@ -303,6 +346,7 @@ export type Database = {
           created_at?: string | null
           email: string
           gender?: string | null
+          gift_points?: number
           id?: string
           location?: string | null
           mobile_number: string
@@ -314,6 +358,7 @@ export type Database = {
           created_at?: string | null
           email?: string
           gender?: string | null
+          gift_points?: number
           id?: string
           location?: string | null
           mobile_number?: string
@@ -353,6 +398,15 @@ export type Database = {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
+        }
+        Returns: boolean
+      }
+      transfer_gift_points: {
+        Args: {
+          p_message?: string
+          p_points: number
+          p_receiver_id: string
+          p_sender_id: string
         }
         Returns: boolean
       }

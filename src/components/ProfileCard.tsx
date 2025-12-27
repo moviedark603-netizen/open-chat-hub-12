@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MessageSquare, MapPin } from "lucide-react";
 import ConnectionActions from "./ConnectionActions";
+import SendGiftPoints from "./SendGiftPoints";
 
 interface ProfileCardProps {
   profile: {
@@ -64,14 +65,21 @@ const ProfileCard = ({ profile, currentProfileId }: ProfileCardProps) => {
           {/* Actions */}
           <div className="space-y-2 pt-2">
             <ConnectionActions profileId={profile.id} currentProfileId={currentProfileId} />
-            <Button
-              onClick={() => navigate(`/messages/${profile.id}`)}
-              className="w-full bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 hover-glow transition-all"
-              size="sm"
-            >
-              <MessageSquare className="w-4 h-4 mr-2 group-hover:animate-wiggle" />
-              Send Message
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={() => navigate(`/messages/${profile.id}`)}
+                className="flex-1 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 hover-glow transition-all"
+                size="sm"
+              >
+                <MessageSquare className="w-4 h-4 mr-2 group-hover:animate-wiggle" />
+                Message
+              </Button>
+              <SendGiftPoints
+                currentProfileId={currentProfileId}
+                receiverProfileId={profile.id}
+                receiverName={profile.name}
+              />
+            </div>
           </div>
         </div>
       </CardContent>
