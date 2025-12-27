@@ -71,20 +71,21 @@ const RecentlyJoined = ({ currentProfileId }: RecentlyJoinedProps) => {
   }
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden animate-fade-in">
       <CardContent className="p-4">
         <div className="flex items-center gap-2 mb-4">
-          <UserPlus className="w-5 h-5 text-primary" />
+          <UserPlus className="w-5 h-5 text-primary animate-bounce-soft" />
           <h2 className="text-lg font-semibold">Recently Joined</h2>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-          {recentProfiles.map((profile) => (
+          {recentProfiles.map((profile, index) => (
             <div
               key={profile.id}
               onClick={() => currentProfileId ? navigate(`/messages/${profile.id}`) : navigate("/auth")}
-              className="flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-muted cursor-pointer transition-all hover:scale-105"
+              className="flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-muted cursor-pointer transition-all hover-scale animate-fade-in-up opacity-0"
+              style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'forwards' }}
             >
-              <Avatar className="w-16 h-16 ring-2 ring-primary/20">
+              <Avatar className="w-16 h-16 ring-2 ring-primary/20 hover:ring-primary/50 transition-all">
                 <AvatarImage src={profile.photo_url || ""} />
                 <AvatarFallback className="bg-primary text-primary-foreground text-lg">
                   {profile.name.charAt(0).toUpperCase()}
