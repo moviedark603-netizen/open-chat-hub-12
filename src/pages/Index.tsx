@@ -226,22 +226,22 @@ const Index = () => {
       <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-accent/5 to-secondary border-b border-border">
         <div className="container mx-auto px-4 py-12 md:py-20">
           <div className="max-w-4xl mx-auto text-center">
-            <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">
+            <Badge className="mb-4 bg-primary/10 text-primary border-primary/20 animate-fade-in-down">
               #1 Local Dating & Connection Platform
             </Badge>
-            <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-4 md:mb-6">
+            <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-4 md:mb-6 animate-fade-in opacity-0 animate-delay-100">
               Find Your Perfect Match Near You
             </h2>
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto animate-fade-in opacity-0 animate-delay-200">
               OTHERS is the trusted platform for meaningful connections. Meet real people in your area who share your interests, values, and dreams.
             </p>
             
             {!currentProfile ? (
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up opacity-0 animate-delay-300">
                 <Button 
                   size="lg" 
                   onClick={() => navigate("/auth")}
-                  className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-lg px-10 py-6"
+                  className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-lg px-10 py-6 hover-lift hover-glow"
                 >
                   Join Free Today
                 </Button>
@@ -249,15 +249,15 @@ const Index = () => {
                   size="lg" 
                   variant="outline"
                   onClick={() => navigate("/auth")}
-                  className="text-lg px-10 py-6"
+                  className="text-lg px-10 py-6 hover-lift"
                 >
                   Sign In
                 </Button>
               </div>
             ) : (
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6">
-                <div className="flex items-center gap-2 text-sm md:text-base text-muted-foreground bg-card px-4 py-2 rounded-full border border-border">
-                  <MapPin className="w-4 h-4 text-primary" />
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6 animate-fade-in opacity-0 animate-delay-200">
+                <div className="flex items-center gap-2 text-sm md:text-base text-muted-foreground bg-card px-4 py-2 rounded-full border border-border hover-lift">
+                  <MapPin className="w-4 h-4 text-primary animate-bounce-soft" />
                   <span className="font-medium">{currentProfile.location}</span>
                   <Button
                     variant="ghost"
@@ -273,15 +273,15 @@ const Index = () => {
 
             {/* Stats */}
             <div className="grid grid-cols-3 gap-4 md:gap-8 mt-12 max-w-lg mx-auto">
-              <div className="text-center">
+              <div className="text-center animate-fade-in-up opacity-0 animate-delay-400">
                 <div className="text-2xl md:text-4xl font-bold text-primary">10K+</div>
                 <div className="text-xs md:text-sm text-muted-foreground">Active Users</div>
               </div>
-              <div className="text-center">
+              <div className="text-center animate-fade-in-up opacity-0 animate-delay-500">
                 <div className="text-2xl md:text-4xl font-bold text-primary">50+</div>
                 <div className="text-xs md:text-sm text-muted-foreground">Cities</div>
               </div>
-              <div className="text-center">
+              <div className="text-center animate-fade-in-up opacity-0 animate-delay-700">
                 <div className="text-2xl md:text-4xl font-bold text-primary">5K+</div>
                 <div className="text-xs md:text-sm text-muted-foreground">Connections Made</div>
               </div>
@@ -303,9 +303,13 @@ const Index = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature, index) => (
-              <Card key={index} className="border-border bg-card hover:shadow-lg transition-shadow">
+              <Card 
+                key={index} 
+                className="border-border bg-card card-hover animate-fade-in-up opacity-0"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
                 <CardContent className="p-6 text-center">
-                  <div className="bg-primary/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <div className="bg-primary/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 hover:animate-bounce-soft transition-all">
                     {feature.icon}
                   </div>
                   <h3 className="text-xl font-semibold text-foreground mb-2">{feature.title}</h3>
@@ -330,8 +334,12 @@ const Index = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {howItWorks.map((item, index) => (
-              <div key={index} className="relative text-center">
-                <div className="bg-gradient-to-br from-primary to-accent text-primary-foreground rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+              <div 
+                key={index} 
+                className="relative text-center animate-fade-in-up opacity-0"
+                style={{ animationDelay: `${index * 150}ms` }}
+              >
+                <div className="bg-gradient-to-br from-primary to-accent text-primary-foreground rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4 text-xl font-bold hover:animate-wiggle transition-all hover:scale-110">
                   {item.step}
                 </div>
                 <h3 className="text-xl font-semibold text-foreground mb-2">{item.title}</h3>

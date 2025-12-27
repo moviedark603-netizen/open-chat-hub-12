@@ -23,7 +23,7 @@ const ProfileCard = ({ profile, currentProfileId }: ProfileCardProps) => {
   const navigate = useNavigate();
 
   return (
-    <Card className="group overflow-hidden hover:shadow-strong transition-all duration-300 hover:-translate-y-1 border-border">
+    <Card className="group overflow-hidden card-hover border-border animate-scale-in opacity-0" style={{ animationFillMode: 'forwards' }}>
       <CardContent className="p-0">
         {/* Profile Image */}
         <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-primary/10 to-accent/10">
@@ -66,10 +66,10 @@ const ProfileCard = ({ profile, currentProfileId }: ProfileCardProps) => {
             <ConnectionActions profileId={profile.id} currentProfileId={currentProfileId} />
             <Button
               onClick={() => navigate(`/messages/${profile.id}`)}
-              className="w-full bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90"
+              className="w-full bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 hover-glow transition-all"
               size="sm"
             >
-              <MessageSquare className="w-4 h-4 mr-2" />
+              <MessageSquare className="w-4 h-4 mr-2 group-hover:animate-wiggle" />
               Send Message
             </Button>
           </div>

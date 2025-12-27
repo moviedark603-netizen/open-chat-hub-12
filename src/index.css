@@ -105,3 +105,83 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+/* Animation utility classes */
+@layer utilities {
+  .animate-delay-100 {
+    animation-delay: 100ms;
+  }
+  .animate-delay-200 {
+    animation-delay: 200ms;
+  }
+  .animate-delay-300 {
+    animation-delay: 300ms;
+  }
+  .animate-delay-400 {
+    animation-delay: 400ms;
+  }
+  .animate-delay-500 {
+    animation-delay: 500ms;
+  }
+  .animate-delay-700 {
+    animation-delay: 700ms;
+  }
+  .animate-delay-1000 {
+    animation-delay: 1000ms;
+  }
+
+  /* Hover effects */
+  .hover-lift {
+    @apply transition-all duration-300 ease-out;
+  }
+  .hover-lift:hover {
+    @apply -translate-y-1 shadow-lg;
+  }
+
+  .hover-scale {
+    @apply transition-transform duration-300 ease-out;
+  }
+  .hover-scale:hover {
+    @apply scale-105;
+  }
+
+  .hover-glow {
+    @apply transition-shadow duration-300;
+  }
+  .hover-glow:hover {
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.4);
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+  }
+
+  /* Card hover effect */
+  .card-hover {
+    @apply transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl;
+  }
+
+  /* Shimmer effect for loading */
+  .shimmer-bg {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--muted)) 0%,
+      hsl(var(--muted) / 0.5) 50%,
+      hsl(var(--muted)) 100%
+    );
+    background-size: 200% 100%;
+    @apply animate-shimmer;
+  }
+
+  /* Stagger children animations */
+  .stagger-children > * {
+    @apply opacity-0;
+  }
+  .stagger-children.animate > *:nth-child(1) { @apply animate-fade-in-up; animation-delay: 0ms; }
+  .stagger-children.animate > *:nth-child(2) { @apply animate-fade-in-up; animation-delay: 100ms; }
+  .stagger-children.animate > *:nth-child(3) { @apply animate-fade-in-up; animation-delay: 200ms; }
+  .stagger-children.animate > *:nth-child(4) { @apply animate-fade-in-up; animation-delay: 300ms; }
+  .stagger-children.animate > *:nth-child(5) { @apply animate-fade-in-up; animation-delay: 400ms; }
+  .stagger-children.animate > *:nth-child(6) { @apply animate-fade-in-up; animation-delay: 500ms; }
+}
