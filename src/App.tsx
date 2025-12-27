@@ -20,6 +20,7 @@ import SafetyTips from "./pages/SafetyTips";
 import FAQ from "./pages/FAQ";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
+import WelcomeBot from "./components/WelcomeBot";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +50,7 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <WelcomeBot />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
