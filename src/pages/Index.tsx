@@ -8,6 +8,7 @@ import ProfileCard from "@/components/ProfileCard";
 import { LogOut, MessageSquare, User, Shield, MapPin, Heart, Users, Globe, Lock, Sparkles, CheckCircle } from "lucide-react";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { useMessageNotifications } from "@/hooks/useMessageNotifications";
+import { useGiftNotifications } from "@/hooks/useGiftNotifications";
 import MobileNav from "@/components/MobileNav";
 import RecentMessages from "@/components/RecentMessages";
 import RecentlyJoined from "@/components/RecentlyJoined";
@@ -29,6 +30,7 @@ const Index = () => {
   const navigate = useNavigate();
   const { isAdmin } = useIsAdmin();
   const { unreadCount } = useMessageNotifications(currentProfile?.id || null);
+  useGiftNotifications(currentProfile?.id || null);
 
   useEffect(() => {
     checkAuth();
