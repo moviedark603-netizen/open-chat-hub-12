@@ -12,6 +12,7 @@ import { useGiftNotifications } from "@/hooks/useGiftNotifications";
 import MobileNav from "@/components/MobileNav";
 import RecentMessages from "@/components/RecentMessages";
 import RecentlyJoined from "@/components/RecentlyJoined";
+import ProfileSearch from "@/components/ProfileSearch";
 
 interface Profile {
   id: string;
@@ -26,6 +27,8 @@ interface Profile {
 
 const Index = () => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
+  const [filteredProfiles, setFilteredProfiles] = useState<Profile[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentProfile, setCurrentProfile] = useState<Profile | null>(null);
   const navigate = useNavigate();
   const { isAdmin } = useIsAdmin();
@@ -79,8 +82,21 @@ const Index = () => {
     const { data, error } = await query;
 
     if (!error && data) {
-      const filteredProfiles = data.filter((p) => p.user_id !== user?.id);
-      setProfiles(filteredProfiles);
+      const allProfiles = data.filter((p) => p.user_id !== user?.id);
+      setProfiles(allProfiles);
+      setFilteredProfiles(allProfiles);
+    }
+  };
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    if (!query.trim()) {
+      setFilteredProfiles(profiles);
+    } else {
+      const filtered = profiles.filter((p) =>
+        p.name.toLowerCase().includes(query.toLowerCase())
+      );
+      setFilteredProfiles(filtered);
     }
   };
 
@@ -453,14 +469,22 @@ const Index = () => {
 
         {/* Main Content */}
         <div className="mb-6 md:mb-8">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
             <h2 className="text-2xl md:text-3xl font-bold text-foreground">
               People Near You
             </h2>
-            <Badge variant="secondary" className="text-sm">
-              {profiles.length} {profiles.length === 1 ? 'match' : 'matches'}
-            </Badge>
+            <div className="flex items-center gap-3">
+              {currentProfile && <ProfileSearch onSearch={handleSearch} />}
+              <Badge variant="secondary" className="text-sm">
+                {filteredProfiles.length} {filteredProfiles.length === 1 ? 'match' : 'matches'}
+              </Badge>
+            </div>
           </div>
+          {searchQuery && (
+            <p className="text-sm text-muted-foreground">
+              Showing results for "{searchQuery}"
+            </p>
+          )}
         </div>
 
         {!currentProfile ? (
@@ -478,11 +502,23 @@ const Index = () => {
               Get Started Free
             </Button>
           </div>
-        ) : profiles.length > 0 ? (
+        ) : filteredProfiles.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-            {profiles.map((profile) => (
+            {filteredProfiles.map((profile) => (
               <ProfileCard key={profile.id} profile={profile} currentProfileId={currentProfile.id} />
             ))}
+          </div>
+        ) : searchQuery ? (
+          <div className="text-center py-16 md:py-24">
+            <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-full w-20 h-20 md:w-24 md:h-24 flex items-center justify-center mx-auto mb-6">
+              <MessageSquare className="w-10 h-10 md:w-12 md:h-12 text-primary" />
+            </div>
+            <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2">
+              No results found
+            </h3>
+            <p className="text-base md:text-lg text-muted-foreground px-4 mb-6">
+              No profiles match "{searchQuery}". Try a different name.
+            </p>
           </div>
         ) : (
           <div className="text-center py-16 md:py-24">
