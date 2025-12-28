@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { MessageCircle, X, Send } from "lucide-react";
+import { MessageCircle, X, Send, GripVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -10,6 +10,11 @@ interface Message {
   content: string;
   isBot: boolean;
   timestamp: Date;
+}
+
+interface Position {
+  x: number;
+  y: number;
 }
 
 const botResponses: Record<string, string> = {
@@ -31,7 +36,11 @@ const WelcomeBot = () => {
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [hasShownWelcome, setHasShownWelcome] = useState(false);
+  const [position, setPosition] = useState<Position>({ x: 24, y: 24 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState<Position>({ x: 0, y: 0 });
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -52,6 +61,59 @@ const WelcomeBot = () => {
       }, 1500);
     }
   }, [isOpen, hasShownWelcome]);
+
+  // Handle mouse/touch drag
+  useEffect(() => {
+    const handleMove = (clientX: number, clientY: number) => {
+      if (!isDragging) return;
+      
+      const newX = window.innerWidth - clientX - dragOffset.x;
+      const newY = window.innerHeight - clientY - dragOffset.y;
+      
+      // Keep within bounds
+      const maxX = window.innerWidth - 64;
+      const maxY = window.innerHeight - 64;
+      
+      setPosition({
+        x: Math.max(8, Math.min(newX, maxX)),
+        y: Math.max(8, Math.min(newY, maxY))
+      });
+    };
+
+    const handleMouseMove = (e: MouseEvent) => handleMove(e.clientX, e.clientY);
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length === 1) {
+        handleMove(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    };
+
+    const handleEnd = () => setIsDragging(false);
+
+    if (isDragging) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleEnd);
+      window.addEventListener('touchmove', handleTouchMove);
+      window.addEventListener('touchend', handleEnd);
+    }
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleEnd);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleEnd);
+    };
+  }, [isDragging, dragOffset]);
+
+  const handleDragStart = (clientX: number, clientY: number) => {
+    if (!buttonRef.current) return;
+    
+    const rect = buttonRef.current.getBoundingClientRect();
+    setDragOffset({
+      x: rect.right - clientX,
+      y: rect.bottom - clientY
+    });
+    setIsDragging(true);
+  };
 
   const addBotMessage = (content: string) => {
     setMessages(prev => [...prev, {
@@ -102,23 +164,44 @@ const WelcomeBot = () => {
 
   return (
     <>
-      {/* Chat Toggle Button */}
+      {/* Chat Toggle Button - Draggable */}
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        ref={buttonRef}
+        onClick={() => !isDragging && setIsOpen(!isOpen)}
+        onMouseDown={(e) => handleDragStart(e.clientX, e.clientY)}
+        onTouchStart={(e) => {
+          if (e.touches.length === 1) {
+            handleDragStart(e.touches[0].clientX, e.touches[0].clientY);
+          }
+        }}
+        style={{
+          right: `${position.x}px`,
+          bottom: `${position.y}px`,
+        }}
         className={cn(
-          "fixed bottom-6 right-6 z-50 p-4 rounded-full shadow-lg transition-all duration-300",
+          "fixed z-50 p-4 rounded-full shadow-lg transition-all duration-150",
           "bg-primary hover:bg-primary/90 text-primary-foreground",
-          "hover:scale-110 hover:shadow-xl animate-bounce-soft",
-          isOpen && "rotate-180"
+          "hover:shadow-xl",
+          isDragging ? "cursor-grabbing scale-110" : "cursor-grab",
+          !isDragging && "hover:scale-105"
         )}
       >
-        {isOpen ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
+        <div className="relative">
+          {isOpen ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
+          {!isOpen && (
+            <GripVertical className="h-3 w-3 absolute -top-1 -right-1 text-primary-foreground/60" />
+          )}
+        </div>
       </button>
 
       {/* Chat Window */}
       <div
+        style={{
+          right: `${position.x}px`,
+          bottom: `${position.y + 64}px`,
+        }}
         className={cn(
-          "fixed bottom-24 right-6 z-50 w-80 sm:w-96 bg-card rounded-2xl shadow-2xl border border-border",
+          "fixed z-50 w-80 sm:w-96 bg-card rounded-2xl shadow-2xl border border-border",
           "transition-all duration-300 transform",
           isOpen ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-95 pointer-events-none"
         )}
@@ -132,7 +215,7 @@ const WelcomeBot = () => {
             </Avatar>
             <div>
               <h3 className="font-semibold">Welcome Bot</h3>
-              <p className="text-xs opacity-80">Always here to help</p>
+              <p className="text-xs opacity-80">Drag me anywhere!</p>
             </div>
             <div className="ml-auto flex items-center gap-1">
               <span className="h-2 w-2 bg-green-400 rounded-full animate-pulse" />
@@ -147,7 +230,7 @@ const WelcomeBot = () => {
             <div
               key={message.id}
               className={cn(
-                "flex animate-fade-in-up",
+                "flex animate-fade-in",
                 message.isBot ? "justify-start" : "justify-end"
               )}
             >
