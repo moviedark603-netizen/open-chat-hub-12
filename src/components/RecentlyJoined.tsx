@@ -23,6 +23,7 @@ interface RecentlyJoinedProps {
 const RecentlyJoined = ({ currentProfileId }: RecentlyJoinedProps) => {
   const navigate = useNavigate();
   const [recentProfiles, setRecentProfiles] = useState<Profile[]>([]);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     fetchRecentlyJoined();
@@ -52,7 +53,7 @@ const RecentlyJoined = ({ currentProfileId }: RecentlyJoinedProps) => {
       .from("profiles")
       .select("*")
       .order("created_at", { ascending: false })
-      .limit(6);
+      .limit(24);
 
     // Exclude current profile if logged in
     if (currentProfileId) {
@@ -70,15 +71,29 @@ const RecentlyJoined = ({ currentProfileId }: RecentlyJoinedProps) => {
     return null;
   }
 
+  const displayedProfiles = showAll ? recentProfiles : recentProfiles.slice(0, 6);
+
   return (
     <Card className="overflow-hidden animate-fade-in">
       <CardContent className="p-4">
-        <div className="flex items-center gap-2 mb-4">
-          <UserPlus className="w-5 h-5 text-primary animate-bounce-soft" />
-          <h2 className="text-lg font-semibold">Recently Joined</h2>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <UserPlus className="w-5 h-5 text-primary animate-bounce-soft" />
+            <h2 className="text-lg font-semibold">Recently Joined</h2>
+          </div>
+          {recentProfiles.length > 6 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowAll(!showAll)}
+              className="text-primary hover:text-primary/80"
+            >
+              {showAll ? "Show Less" : `View All (${recentProfiles.length})`}
+            </Button>
+          )}
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-          {recentProfiles.map((profile, index) => (
+          {displayedProfiles.map((profile, index) => (
             <div
               key={profile.id}
               onClick={() => currentProfileId ? navigate(`/messages/${profile.id}`) : navigate("/auth")}
