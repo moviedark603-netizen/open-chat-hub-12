@@ -7,6 +7,13 @@ import { UserPlus, MapPin, Search, X } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Profile {
   id: string;
@@ -26,6 +33,7 @@ const RecentlyJoined = ({ currentProfileId }: RecentlyJoinedProps) => {
   const [recentProfiles, setRecentProfiles] = useState<Profile[]>([]);
   const [showAll, setShowAll] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [genderFilter, setGenderFilter] = useState<string>("all");
   const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
@@ -51,7 +59,7 @@ const RecentlyJoined = ({ currentProfileId }: RecentlyJoinedProps) => {
     };
   }, [currentProfileId]);
 
-  const fetchRecentlyJoined = async (query?: string) => {
+  const fetchRecentlyJoined = async (query?: string, gender?: string) => {
     setIsSearching(true);
     let supabaseQuery = supabase
       .from("profiles")
@@ -67,6 +75,10 @@ const RecentlyJoined = ({ currentProfileId }: RecentlyJoinedProps) => {
       supabaseQuery = supabaseQuery.ilike("name", `%${query.trim()}%`);
     }
 
+    if (gender && gender !== "all") {
+      supabaseQuery = supabaseQuery.eq("gender", gender);
+    }
+
     const { data: profiles } = await supabaseQuery;
 
     if (profiles) {
@@ -76,14 +88,23 @@ const RecentlyJoined = ({ currentProfileId }: RecentlyJoinedProps) => {
   };
 
   const handleSearch = () => {
-    fetchRecentlyJoined(searchQuery);
-    if (searchQuery.trim()) {
+    fetchRecentlyJoined(searchQuery, genderFilter);
+    if (searchQuery.trim() || genderFilter !== "all") {
+      setShowAll(true);
+    }
+  };
+
+  const handleGenderChange = (value: string) => {
+    setGenderFilter(value);
+    fetchRecentlyJoined(searchQuery, value);
+    if (value !== "all") {
       setShowAll(true);
     }
   };
 
   const handleClear = () => {
     setSearchQuery("");
+    setGenderFilter("all");
     fetchRecentlyJoined();
     setShowAll(false);
   };
@@ -109,7 +130,18 @@ const RecentlyJoined = ({ currentProfileId }: RecentlyJoinedProps) => {
             <h2 className="text-lg font-semibold">Recently Joined</h2>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
+            <Select value={genderFilter} onValueChange={handleGenderChange}>
+              <SelectTrigger className="w-28">
+                <SelectValue placeholder="Gender" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="man">Male</SelectItem>
+                <SelectItem value="woman">Female</SelectItem>
+              </SelectContent>
+            </Select>
+            
             <div className="relative flex-1 sm:flex-none">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
