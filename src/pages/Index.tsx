@@ -13,6 +13,7 @@ import MobileNav from "@/components/MobileNav";
 import RecentMessages from "@/components/RecentMessages";
 import RecentlyJoined from "@/components/RecentlyJoined";
 import ProfileSearch from "@/components/ProfileSearch";
+import ScrollingNames from "@/components/ScrollingNames";
 
 interface Profile {
   id: string;
@@ -171,6 +172,9 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-0">
+      {/* Scrolling Names Ticker */}
+      <ScrollingNames />
+
       {/* Header */}
       <header className="bg-card border-b border-border sticky top-0 z-40 backdrop-blur-sm bg-card/95">
         <div className="container mx-auto px-4 py-3 md:py-4 flex items-center justify-between">
