@@ -1,13 +1,18 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Users } from "lucide-react";
+import OnlineStatusBadge from "./OnlineStatusBadge";
 
 interface Profile {
   id: string;
   name: string;
 }
 
-const ScrollingNames = () => {
+interface ScrollingNamesProps {
+  onlineUserIds?: string[];
+}
+
+const ScrollingNames = ({ onlineUserIds = [] }: ScrollingNamesProps) => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
 
   useEffect(() => {
@@ -45,7 +50,7 @@ const ScrollingNames = () => {
                 key={`${profile.id}-${index}`}
                 className="inline-flex items-center gap-1.5 text-sm text-foreground/80"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                <OnlineStatusBadge isOnline={onlineUserIds.includes(profile.id)} size="sm" />
                 {profile.name}
               </span>
             ))}
