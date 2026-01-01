@@ -7,6 +7,7 @@ import { UserPlus, MapPin, Search, X } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import OnlineStatusBadge from "./OnlineStatusBadge";
 import {
   Select,
   SelectContent,
@@ -26,9 +27,10 @@ interface Profile {
 
 interface RecentlyJoinedProps {
   currentProfileId: string | null;
+  onlineUserIds?: string[];
 }
 
-const RecentlyJoined = ({ currentProfileId }: RecentlyJoinedProps) => {
+const RecentlyJoined = ({ currentProfileId, onlineUserIds = [] }: RecentlyJoinedProps) => {
   const navigate = useNavigate();
   const [recentProfiles, setRecentProfiles] = useState<Profile[]>([]);
   const [showAll, setShowAll] = useState(false);
@@ -180,14 +182,21 @@ const RecentlyJoined = ({ currentProfileId }: RecentlyJoinedProps) => {
                   className="flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-muted cursor-pointer transition-all hover-scale animate-fade-in-up opacity-0"
                   style={{ animationDelay: `${index * 50}ms`, animationFillMode: 'forwards' }}
                 >
-                  <Avatar className="w-16 h-16 ring-2 ring-primary/20 hover:ring-primary/50 transition-all">
-                    <AvatarImage src={profile.photo_url || ""} />
-                    <AvatarFallback className="bg-primary text-primary-foreground text-lg">
-                      {profile.name.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
+                  <div className="relative">
+                    <Avatar className="w-16 h-16 ring-2 ring-primary/20 hover:ring-primary/50 transition-all">
+                      <AvatarImage src={profile.photo_url || ""} />
+                      <AvatarFallback className="bg-primary text-primary-foreground text-lg">
+                        {profile.name.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="absolute -bottom-0.5 -right-0.5">
+                      <OnlineStatusBadge isOnline={onlineUserIds.includes(profile.id)} size="md" />
+                    </div>
+                  </div>
                   <div className="text-center w-full">
-                    <h3 className="font-semibold text-sm truncate">{profile.name}</h3>
+                    <div className="flex items-center justify-center gap-1">
+                      <h3 className="font-semibold text-sm truncate">{profile.name}</h3>
+                    </div>
                     <div className="flex items-center justify-center gap-1 text-xs text-muted-foreground">
                       <MapPin className="w-3 h-3" />
                       <span className="truncate">{profile.location || "Unknown"}</span>

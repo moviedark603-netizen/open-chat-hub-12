@@ -14,6 +14,9 @@ import RecentMessages from "@/components/RecentMessages";
 import RecentlyJoined from "@/components/RecentlyJoined";
 import ProfileSearch from "@/components/ProfileSearch";
 import ScrollingNames from "@/components/ScrollingNames";
+import PageViewCounter from "@/components/PageViewCounter";
+import { useOnlinePresence } from "@/hooks/useOnlinePresence";
+import { usePageViews } from "@/hooks/usePageViews";
 
 interface Profile {
   id: string;
@@ -35,6 +38,11 @@ const Index = () => {
   const { isAdmin } = useIsAdmin();
   const { unreadCount } = useMessageNotifications(currentProfile?.id || null);
   useGiftNotifications(currentProfile?.id || null);
+  const { onlineUsers, isUserOnline, getOnlineUserIds, onlineCount } = useOnlinePresence(
+    currentProfile?.id || null,
+    currentProfile?.name || null
+  );
+  const { viewCount } = usePageViews('home');
 
   useEffect(() => {
     checkAuth();
@@ -173,7 +181,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-0">
       {/* Scrolling Names Ticker */}
-      <ScrollingNames />
+      <ScrollingNames onlineUserIds={getOnlineUserIds()} />
 
       {/* Header */}
       <header className="bg-card border-b border-border sticky top-0 z-40 backdrop-blur-sm bg-card/95">
@@ -240,7 +248,7 @@ const Index = () => {
       {/* Recently Joined Section - Top */}
       <section className="bg-background border-b border-border py-4">
         <div className="container mx-auto px-4">
-          <RecentlyJoined currentProfileId={currentProfile?.id || null} />
+          <RecentlyJoined currentProfileId={currentProfile?.id || null} onlineUserIds={getOnlineUserIds()} />
         </div>
       </section>
 
@@ -293,8 +301,13 @@ const Index = () => {
               </div>
             )}
 
+            {/* Page Stats */}
+            <div className="flex justify-center mb-8 animate-fade-in opacity-0 animate-delay-300">
+              <PageViewCounter viewCount={viewCount} onlineCount={onlineCount} />
+            </div>
+
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 md:gap-8 mt-12 max-w-lg mx-auto">
+            <div className="grid grid-cols-3 gap-4 md:gap-8 mt-8 max-w-lg mx-auto">
               <div className="text-center animate-fade-in-up opacity-0 animate-delay-400">
                 <div className="text-2xl md:text-4xl font-bold text-primary">10K+</div>
                 <div className="text-xs md:text-sm text-muted-foreground">Active Users</div>

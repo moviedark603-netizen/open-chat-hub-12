@@ -175,6 +175,27 @@ export type Database = {
           },
         ]
       }
+      page_views: {
+        Row: {
+          id: string
+          last_viewed_at: string | null
+          page_name: string
+          view_count: number
+        }
+        Insert: {
+          id?: string
+          last_viewed_at?: string | null
+          page_name: string
+          view_count?: number
+        }
+        Update: {
+          id?: string
+          last_viewed_at?: string | null
+          page_name?: string
+          view_count?: number
+        }
+        Relationships: []
+      }
       photos: {
         Row: {
           created_at: string | null
@@ -401,6 +422,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_page_view: { Args: { p_page_name: string }; Returns: number }
       transfer_gift_points: {
         Args: {
           p_message?: string
