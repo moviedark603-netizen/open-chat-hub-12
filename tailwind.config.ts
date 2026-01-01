@@ -116,6 +116,10 @@ export default {
           "0%, 100%": { transform: "rotate(-3deg)" },
           "50%": { transform: "rotate(3deg)" },
         },
+        "marquee": {
+          "0%": { transform: "translateX(0%)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -132,6 +136,7 @@ export default {
         "shimmer": "shimmer 2s linear infinite",
         "float": "float 3s ease-in-out infinite",
         "wiggle": "wiggle 1s ease-in-out infinite",
+        "marquee": "marquee 20s linear infinite",
       },
     },
   },
