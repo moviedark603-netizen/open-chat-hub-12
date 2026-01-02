@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Users } from "lucide-react";
 import OnlineStatusBadge from "./OnlineStatusBadge";
@@ -13,6 +14,7 @@ interface ScrollingNamesProps {
 }
 
 const ScrollingNames = ({ onlineUserIds = [] }: ScrollingNamesProps) => {
+  const navigate = useNavigate();
   const [profiles, setProfiles] = useState<Profile[]>([]);
 
   useEffect(() => {
@@ -49,13 +51,14 @@ const ScrollingNames = ({ onlineUserIds = [] }: ScrollingNamesProps) => {
         <div className="overflow-hidden flex-1">
           <div className="animate-marquee whitespace-nowrap flex items-center gap-4">
             {duplicatedProfiles.map((profile, index) => (
-              <span
+              <button
                 key={`${profile.id}-${index}`}
-                className="inline-flex items-center gap-1.5 text-sm text-foreground/80"
+                onClick={() => navigate(`/community?profile=${profile.id}`)}
+                className="inline-flex items-center gap-1.5 text-sm text-foreground/80 hover:text-primary transition-colors cursor-pointer hover:underline"
               >
                 <OnlineStatusBadge isOnline={onlineUserIds.includes(profile.id)} size="sm" />
                 {profile.name}
-              </span>
+              </button>
             ))}
           </div>
         </div>
