@@ -24,6 +24,8 @@ interface Profile {
   gender: string;
   location: string;
   gift_points: number;
+  telegram_id: string | null;
+  whatsapp_number: string | null;
 }
 
 const Profile = () => {
@@ -37,6 +39,8 @@ const Profile = () => {
     mobile_number: "",
     gender: "man" as "man" | "woman",
     location: "",
+    telegram_id: "",
+    whatsapp_number: "",
     photo: null as File | null,
   });
   const [saving, setSaving] = useState(false);
@@ -68,6 +72,8 @@ const Profile = () => {
         mobile_number: profile.mobile_number || "",
         gender: (profile.gender || "man") as "man" | "woman",
         location: profile.location || "",
+        telegram_id: profile.telegram_id || "",
+        whatsapp_number: profile.whatsapp_number || "",
         photo: null,
       });
     }
@@ -117,6 +123,8 @@ const Profile = () => {
           mobile_number: profileForm.mobile_number,
           gender: profileForm.gender,
           location: profileForm.location,
+          telegram_id: profileForm.telegram_id || null,
+          whatsapp_number: profileForm.whatsapp_number || null,
           photo_url: photoUrl,
         })
         .eq("id", currentProfile.id);
@@ -239,6 +247,26 @@ const Profile = () => {
                   <p className="text-xs text-muted-foreground">
                     Changing location will update your matches
                   </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="profile-telegram">Telegram ID (Optional)</Label>
+                  <Input
+                    id="profile-telegram"
+                    value={profileForm.telegram_id}
+                    onChange={(e) => setProfileForm({ ...profileForm, telegram_id: e.target.value })}
+                    placeholder="@username"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="profile-whatsapp">WhatsApp Number (Optional)</Label>
+                  <Input
+                    id="profile-whatsapp"
+                    value={profileForm.whatsapp_number}
+                    onChange={(e) => setProfileForm({ ...profileForm, whatsapp_number: e.target.value })}
+                    placeholder="+1234567890"
+                  />
                 </div>
 
                 <Button type="submit" className="w-full" disabled={saving}>
