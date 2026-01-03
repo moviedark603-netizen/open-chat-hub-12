@@ -7,15 +7,15 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { 
-  User, 
   MapPin, 
-  Mail, 
   Phone, 
   MessageCircle, 
   Gift, 
   ArrowLeft,
   Send,
-  Globe
+  Globe,
+  Lock,
+  Crown
 } from "lucide-react";
 import PhotoGallery from "@/components/PhotoGallery";
 import SendGiftPoints from "@/components/SendGiftPoints";
@@ -36,6 +36,7 @@ interface Profile {
   telegram_id: string | null;
   whatsapp_number: string | null;
   created_at: string | null;
+  is_premium: boolean;
 }
 
 const UserProfile = () => {
@@ -127,6 +128,8 @@ const UserProfile = () => {
   }
 
   const isOwnProfile = currentProfile?.id === profile.id;
+  const isPremiumViewer = currentProfile?.is_premium || false;
+  const hasContactDetails = profile.telegram_id || profile.whatsapp_number;
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -210,26 +213,52 @@ const UserProfile = () => {
                 Send Message
               </Button>
               
-              {profile.telegram_id && (
-                <Button 
-                  variant="outline" 
-                  className="w-full"
-                  onClick={handleTelegramClick}
-                >
-                  <Globe className="w-4 h-4 mr-2" />
-                  Telegram: @{profile.telegram_id}
-                </Button>
-              )}
-              
-              {profile.whatsapp_number && (
-                <Button 
-                  variant="outline" 
-                  className="w-full text-green-600 border-green-600 hover:bg-green-50"
-                  onClick={handleWhatsAppClick}
-                >
-                  <Phone className="w-4 h-4 mr-2" />
-                  WhatsApp: {profile.whatsapp_number}
-                </Button>
+              {/* Premium-only contact details */}
+              {hasContactDetails && (
+                isPremiumViewer ? (
+                  <>
+                    {profile.telegram_id && (
+                      <Button 
+                        variant="outline" 
+                        className="w-full"
+                        onClick={handleTelegramClick}
+                      >
+                        <Globe className="w-4 h-4 mr-2" />
+                        Telegram: @{profile.telegram_id}
+                      </Button>
+                    )}
+                    
+                    {profile.whatsapp_number && (
+                      <Button 
+                        variant="outline" 
+                        className="w-full text-green-600 border-green-600 hover:bg-green-50"
+                        onClick={handleWhatsAppClick}
+                      >
+                        <Phone className="w-4 h-4 mr-2" />
+                        WhatsApp: {profile.whatsapp_number}
+                      </Button>
+                    )}
+                  </>
+                ) : (
+                  <div className="bg-muted/50 rounded-lg p-4 text-center">
+                    <div className="flex items-center justify-center gap-2 text-muted-foreground mb-2">
+                      <Lock className="w-4 h-4" />
+                      <span className="font-medium">Premium Feature</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      Upgrade to premium to see contact details
+                    </p>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="border-amber-500 text-amber-600 hover:bg-amber-50"
+                      onClick={() => navigate("/profile")}
+                    >
+                      <Crown className="w-4 h-4 mr-2" />
+                      Upgrade to Premium
+                    </Button>
+                  </div>
+                )
               )}
 
               <Separator />
