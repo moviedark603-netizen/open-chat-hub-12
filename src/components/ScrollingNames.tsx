@@ -53,7 +53,7 @@ const ScrollingNames = ({ onlineUserIds = [] }: ScrollingNamesProps) => {
             {duplicatedProfiles.map((profile, index) => (
               <button
                 key={`${profile.id}-${index}`}
-                onClick={() => navigate(`/community?profile=${profile.id}`)}
+                onClick={() => navigate(`/profile/${profile.id}`)}
                 className="inline-flex items-center gap-1.5 text-sm text-foreground/80 hover:text-primary transition-colors cursor-pointer hover:underline"
               >
                 <OnlineStatusBadge isOnline={onlineUserIds.includes(profile.id)} size="sm" />
