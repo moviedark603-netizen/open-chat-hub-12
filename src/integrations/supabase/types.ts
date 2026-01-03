@@ -357,10 +357,12 @@ export type Database = {
           gender: string | null
           gift_points: number
           id: string
+          is_premium: boolean
           location: string | null
           mobile_number: string
           name: string
           photo_url: string | null
+          premium_until: string | null
           telegram_id: string | null
           user_id: string | null
           whatsapp_number: string | null
@@ -371,10 +373,12 @@ export type Database = {
           gender?: string | null
           gift_points?: number
           id?: string
+          is_premium?: boolean
           location?: string | null
           mobile_number: string
           name: string
           photo_url?: string | null
+          premium_until?: string | null
           telegram_id?: string | null
           user_id?: string | null
           whatsapp_number?: string | null
@@ -385,10 +389,12 @@ export type Database = {
           gender?: string | null
           gift_points?: number
           id?: string
+          is_premium?: boolean
           location?: string | null
           mobile_number?: string
           name?: string
           photo_url?: string | null
+          premium_until?: string | null
           telegram_id?: string | null
           user_id?: string | null
           whatsapp_number?: string | null
