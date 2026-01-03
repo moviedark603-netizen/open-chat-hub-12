@@ -8,6 +8,7 @@ import Auth from "./pages/Auth";
 import Messages from "./pages/Messages";
 import Admin from "./pages/Admin";
 import Profile from "./pages/Profile";
+import UserProfile from "./pages/UserProfile";
 import Community from "./pages/Community";
 import PostDetails from "./pages/PostDetails";
 import Groups from "./pages/Groups";
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/messages/:profileId" element={<Messages />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/:profileId" element={<UserProfile />} />
           <Route path="/community" element={<Community />} />
           <Route path="/post/:postId" element={<PostDetails />} />
           <Route path="/groups" element={<Groups />} />
