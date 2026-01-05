@@ -26,6 +26,7 @@ interface Profile {
   gift_points: number;
   telegram_id: string | null;
   whatsapp_number: string | null;
+  username: string | null;
 }
 
 const Profile = () => {
@@ -33,6 +34,7 @@ const Profile = () => {
   const { isAdmin } = useIsAdmin();
   const [currentProfile, setCurrentProfile] = useState<Profile | null>(null);
   const [photoRefresh, setPhotoRefresh] = useState(0);
+  const [usernameError, setUsernameError] = useState("");
   const [profileForm, setProfileForm] = useState({
     name: "",
     email: "",
@@ -41,6 +43,7 @@ const Profile = () => {
     location: "",
     telegram_id: "",
     whatsapp_number: "",
+    username: "",
     photo: null as File | null,
   });
   const [saving, setSaving] = useState(false);
@@ -74,9 +77,31 @@ const Profile = () => {
         location: profile.location || "",
         telegram_id: profile.telegram_id || "",
         whatsapp_number: profile.whatsapp_number || "",
+        username: profile.username || "",
         photo: null,
       });
     }
+  };
+
+  const validateUsername = (value: string) => {
+    if (!value) {
+      setUsernameError("");
+      return true;
+    }
+    if (value.length < 3) {
+      setUsernameError("Username must be at least 3 characters");
+      return false;
+    }
+    if (value.length > 30) {
+      setUsernameError("Username must be 30 characters or less");
+      return false;
+    }
+    if (!/^[a-zA-Z0-9_]+$/.test(value)) {
+      setUsernameError("Only letters, numbers, and underscores allowed");
+      return false;
+    }
+    setUsernameError("");
+    return true;
   };
 
   const handleLogout = async () => {
@@ -116,6 +141,12 @@ const Profile = () => {
         photoUrl = publicUrl;
       }
 
+      // Validate username before saving
+      if (profileForm.username && !validateUsername(profileForm.username)) {
+        setSaving(false);
+        return;
+      }
+
       const { error } = await supabase
         .from("profiles")
         .update({
@@ -125,6 +156,7 @@ const Profile = () => {
           location: profileForm.location,
           telegram_id: profileForm.telegram_id || null,
           whatsapp_number: profileForm.whatsapp_number || null,
+          username: profileForm.username || null,
           photo_url: photoUrl,
         })
         .eq("id", currentProfile.id);
@@ -247,6 +279,32 @@ const Profile = () => {
                   <p className="text-xs text-muted-foreground">
                     Changing location will update your matches
                   </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="profile-username">Username (Optional)</Label>
+                  <div className="flex items-center">
+                    <span className="text-muted-foreground mr-1">@</span>
+                    <Input
+                      id="profile-username"
+                      value={profileForm.username}
+                      onChange={(e) => {
+                        const value = e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '');
+                        setProfileForm({ ...profileForm, username: value });
+                        validateUsername(value);
+                      }}
+                      placeholder="your_username"
+                      className="flex-1"
+                    />
+                  </div>
+                  {usernameError && (
+                    <p className="text-xs text-destructive">{usernameError}</p>
+                  )}
+                  {profileForm.username && !usernameError && (
+                    <p className="text-xs text-muted-foreground">
+                      Your page: /@{profileForm.username}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-2">

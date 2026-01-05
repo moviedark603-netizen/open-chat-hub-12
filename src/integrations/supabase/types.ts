@@ -365,6 +365,7 @@ export type Database = {
           premium_until: string | null
           telegram_id: string | null
           user_id: string | null
+          username: string | null
           whatsapp_number: string | null
         }
         Insert: {
@@ -381,6 +382,7 @@ export type Database = {
           premium_until?: string | null
           telegram_id?: string | null
           user_id?: string | null
+          username?: string | null
           whatsapp_number?: string | null
         }
         Update: {
@@ -397,6 +399,7 @@ export type Database = {
           premium_until?: string | null
           telegram_id?: string | null
           user_id?: string | null
+          username?: string | null
           whatsapp_number?: string | null
         }
         Relationships: []

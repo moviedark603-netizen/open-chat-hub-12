@@ -17,6 +17,7 @@ import ScrollingNames from "@/components/ScrollingNames";
 import PageViewCounter from "@/components/PageViewCounter";
 import { useOnlinePresence } from "@/hooks/useOnlinePresence";
 import { usePageViews } from "@/hooks/usePageViews";
+import logo from "@/assets/logo.jpg";
 
 interface Profile {
   id: string;
@@ -187,9 +188,7 @@ const Index = () => {
       <header className="bg-card border-b border-border sticky top-0 z-40 backdrop-blur-sm bg-card/95">
         <div className="container mx-auto px-4 py-3 md:py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="bg-gradient-to-br from-primary to-accent rounded-full p-1.5 md:p-2">
-              <MessageSquare className="w-5 h-5 md:w-6 md:h-6 text-primary-foreground" />
-            </div>
+            <img src={logo} alt="OTHERS" className="w-10 h-10 md:w-12 md:h-12 rounded-full glow-sm animate-glow-pulse" />
             <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">OTHERS</h1>
           </div>
           <div className="hidden md:flex items-center gap-2">
