@@ -28,6 +28,7 @@ interface Profile {
   user_id: string;
   gender: string;
   location: string;
+  username: string | null;
 }
 
 const Index = () => {
@@ -103,8 +104,10 @@ const Index = () => {
     if (!query.trim()) {
       setFilteredProfiles(profiles);
     } else {
+      const searchTerm = query.toLowerCase().replace('@', '');
       const filtered = profiles.filter((p) =>
-        p.name.toLowerCase().includes(query.toLowerCase())
+        p.name.toLowerCase().includes(searchTerm) ||
+        (p.username && p.username.toLowerCase().includes(searchTerm))
       );
       setFilteredProfiles(filtered);
     }

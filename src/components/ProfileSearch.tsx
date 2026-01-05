@@ -38,7 +38,7 @@ const ProfileSearch = ({ onSearch, className }: ProfileSearchProps) => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Search by name..."
+              placeholder="Search by name or @username..."
               className="pl-9 pr-8 w-48 sm:w-64"
               autoFocus
             />

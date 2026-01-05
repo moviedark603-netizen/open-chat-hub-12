@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { MessageSquare, MapPin } from "lucide-react";
+import { MessageSquare, MapPin, AtSign } from "lucide-react";
 import ConnectionActions from "./ConnectionActions";
 import SendGiftPoints from "./SendGiftPoints";
 
@@ -16,6 +16,7 @@ interface ProfileCardProps {
     photo_url: string | null;
     gender: string;
     location: string;
+    username?: string | null;
   };
   currentProfileId: string;
 }
@@ -56,6 +57,15 @@ const ProfileCard = ({ profile, currentProfileId }: ProfileCardProps) => {
             <h3 className="font-bold text-lg text-card-foreground mb-1 truncate">
               {profile.name}
             </h3>
+            {profile.username && (
+              <button 
+                onClick={() => navigate(`/@${profile.username}`)}
+                className="flex items-center gap-1 text-sm text-primary hover:text-accent transition-colors mb-1"
+              >
+                <AtSign className="w-3.5 h-3.5" />
+                <span className="truncate">{profile.username}</span>
+              </button>
+            )}
             <div className="flex items-center gap-1 text-sm text-muted-foreground">
               <MapPin className="w-3.5 h-3.5 shrink-0 text-primary" />
               <span className="truncate">{profile.location}</span>
