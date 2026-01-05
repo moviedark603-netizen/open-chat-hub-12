@@ -9,6 +9,7 @@ import Messages from "./pages/Messages";
 import Admin from "./pages/Admin";
 import Profile from "./pages/Profile";
 import UserProfile from "./pages/UserProfile";
+import UserPage from "./pages/UserPage";
 import Community from "./pages/Community";
 import PostDetails from "./pages/PostDetails";
 import Groups from "./pages/Groups";
@@ -51,6 +52,7 @@ const App = () => (
           <Route path="/safety" element={<SafetyTips />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/about" element={<About />} />
+          <Route path="/@:username" element={<UserPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
