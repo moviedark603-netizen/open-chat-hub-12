@@ -21,6 +21,8 @@ import BlogArticle from "./pages/BlogArticle";
 import SafetyTips from "./pages/SafetyTips";
 import FAQ from "./pages/FAQ";
 import About from "./pages/About";
+import FreeDating from "./pages/FreeDating";
+import TamilDating from "./pages/TamilDating";
 import NotFound from "./pages/NotFound";
 import WelcomeBot from "./components/WelcomeBot";
 import DownloadBanner from "./components/DownloadBanner";
@@ -52,6 +54,8 @@ const App = () => (
           <Route path="/safety" element={<SafetyTips />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/about" element={<About />} />
+          <Route path="/free-dating" element={<FreeDating />} />
+          <Route path="/tamil-dating" element={<TamilDating />} />
           <Route path="/@:username" element={<UserPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
