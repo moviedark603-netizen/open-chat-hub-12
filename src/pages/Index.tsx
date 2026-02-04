@@ -586,59 +586,88 @@ const Index = () => {
       <MobileNav isAdmin={isAdmin} unreadCount={unreadCount} />
 
       {/* Footer */}
-      <footer className="bg-card border-t border-border py-12">
+      <footer className="bg-card border-t border-border py-8 md:py-12">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-            <div className="md:col-span-2">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-8">
+            <div className="col-span-2">
               <div className="flex items-center gap-2 mb-4">
-                <div className="bg-gradient-to-br from-primary to-accent rounded-full p-1.5">
-                  <MessageSquare className="w-5 h-5 text-primary-foreground" />
-                </div>
-                <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">OTHERS</span>
+                <img src={logo} alt="OTHERS" className="w-8 h-8 rounded-full" />
+                <span className="text-lg md:text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">OTHERS</span>
               </div>
-              <p className="text-muted-foreground text-sm max-w-md">
+              <p className="text-muted-foreground text-xs md:text-sm max-w-md mb-4">
                 OTHERS is your trusted platform for finding meaningful connections. We believe everyone deserves to meet people who truly understand them.
+              </p>
+              <p className="text-muted-foreground text-xs">
+                OTHERS என்பது உங்களுக்கான நம்பகமான இலவச டேட்டிங் தளம்.
               </p>
             </div>
             <div>
-              <h4 className="font-semibold text-foreground mb-4">Quick Links</h4>
+              <h4 className="font-semibold text-foreground mb-3 text-sm md:text-base">Quick Links</h4>
               <ul className="space-y-2">
                 <li>
-                  <button onClick={() => navigate("/")} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  <button onClick={() => navigate("/")} className="text-xs md:text-sm text-muted-foreground hover:text-foreground transition-colors">
                     Home
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => navigate("/community")} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  <button onClick={() => navigate("/free-dating")} className="text-xs md:text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    Free Dating
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => navigate("/tamil-dating")} className="text-xs md:text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    தமிழ் டேட்டிங்
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => navigate("/community")} className="text-xs md:text-sm text-muted-foreground hover:text-foreground transition-colors">
                     Community
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => navigate("/groups")} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                    Groups
+                  <button onClick={() => navigate("/blog")} className="text-xs md:text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    Blog
                   </button>
                 </li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold text-foreground mb-4">Legal</h4>
+              <h4 className="font-semibold text-foreground mb-3 text-sm md:text-base">Legal & Help</h4>
               <ul className="space-y-2">
                 <li>
-                  <button onClick={() => navigate("/terms")} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                    Terms & Conditions
+                  <button onClick={() => navigate("/terms")} className="text-xs md:text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    Terms
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => navigate("/privacy")} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                    Privacy Policy
+                  <button onClick={() => navigate("/privacy")} className="text-xs md:text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    Privacy
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => navigate("/safety")} className="text-xs md:text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    Safety Tips
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => navigate("/faq")} className="text-xs md:text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    FAQ
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => navigate("/about")} className="text-xs md:text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    About
                   </button>
                 </li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-border pt-8 text-center">
-            <p className="text-muted-foreground text-sm">
-              © {new Date().getFullYear()} OTHERS. All rights reserved. Made with ❤️ for meaningful connections.
+          <div className="border-t border-border pt-6 text-center">
+            <p className="text-muted-foreground text-xs md:text-sm">
+              © {new Date().getFullYear()} OTHERS - Free Dating Site India. All rights reserved.
+            </p>
+            <p className="text-muted-foreground text-xs mt-1">
+              இலவச டேட்டிங் தளம் | Free Online Dating
             </p>
           </div>
         </div>
