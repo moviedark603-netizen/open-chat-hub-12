@@ -188,11 +188,11 @@ const Index = () => {
       <ScrollingNames onlineUserIds={getOnlineUserIds()} />
 
       {/* Header */}
-      <header className="bg-card border-b border-border sticky top-0 z-40 backdrop-blur-sm bg-card/95">
+      <header className="bg-card border-b border-border sticky top-0 z-40 backdrop-blur-md bg-card/90 shadow-sm">
         <div className="container mx-auto px-4 py-3 md:py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src={logo} alt="OTHERS" className="w-10 h-10 md:w-12 md:h-12 rounded-full glow-sm animate-glow-pulse" />
-            <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">OTHERS</h1>
+            <img src={logo} alt="OTHERS" className="w-10 h-10 md:w-12 md:h-12 rounded-full glow-md animate-glow-pulse hover:scale-110 transition-transform duration-300" />
+            <h1 className="text-xl md:text-2xl font-bold shimmer-text">OTHERS</h1>
           </div>
           <div className="hidden md:flex items-center gap-2">
             {isAdmin && (
@@ -248,32 +248,39 @@ const Index = () => {
       </header>
 
       {/* Recently Joined Section - Top */}
-      <section className="bg-background border-b border-border py-4">
+      <section className="bg-background border-b border-border py-4 enter-blur">
         <div className="container mx-auto px-4">
           <RecentlyJoined currentProfileId={currentProfile?.id || null} onlineUserIds={getOnlineUserIds()} />
         </div>
       </section>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-accent/5 to-secondary border-b border-border">
+      <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-accent/5 to-secondary border-b border-border spotlight">
+        {/* Animated background blobs */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-20 -left-20 w-72 h-72 bg-primary/10 rounded-full blob float-1 opacity-60" />
+          <div className="absolute top-40 -right-20 w-96 h-96 bg-accent/10 rounded-full blob float-2 opacity-50" />
+          <div className="absolute -bottom-20 left-1/3 w-64 h-64 bg-primary/5 rounded-full blob float-3 opacity-40" />
+        </div>
+        
         <div className="container mx-auto px-4 py-12 md:py-20">
-          <div className="max-w-4xl mx-auto text-center">
-            <Badge className="mb-4 bg-primary/10 text-primary border-primary/20 animate-fade-in-down">
+          <div className="max-w-4xl mx-auto text-center relative z-10">
+            <Badge className="mb-4 bg-primary/10 text-primary border-primary/20 animate-fade-in-down neon-glow">
               #1 Local Dating & Connection Platform
             </Badge>
-            <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-4 md:mb-6 animate-fade-in opacity-0 animate-delay-100">
+            <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-4 md:mb-6 enter-blur enter-blur-delay-1">
               Find Your Perfect Match Near You
             </h2>
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto animate-fade-in opacity-0 animate-delay-200">
+            <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto enter-blur enter-blur-delay-2">
               OTHERS is the trusted platform for meaningful connections. Meet real people in your area who share your interests, values, and dreams.
             </p>
             
             {!currentProfile ? (
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up opacity-0 animate-delay-300">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 enter-blur enter-blur-delay-3">
                 <Button 
                   size="lg" 
                   onClick={() => navigate("/auth")}
-                  className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-lg px-10 py-6 hover-lift hover-glow"
+                  className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-lg px-10 py-6 magnetic-hover btn-ripple heartbeat-cta"
                 >
                   Join Free Today
                 </Button>
@@ -281,14 +288,14 @@ const Index = () => {
                   size="lg" 
                   variant="outline"
                   onClick={() => navigate("/auth")}
-                  className="text-lg px-10 py-6 hover-lift"
+                  className="text-lg px-10 py-6 magnetic-hover glass-animated"
                 >
                   Sign In
                 </Button>
               </div>
             ) : (
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6 animate-fade-in opacity-0 animate-delay-200">
-                <div className="flex items-center gap-2 text-sm md:text-base text-muted-foreground bg-card px-4 py-2 rounded-full border border-border hover-lift">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6 enter-blur enter-blur-delay-2">
+                <div className="flex items-center gap-2 text-sm md:text-base text-muted-foreground bg-card px-4 py-2 rounded-full border border-border glass-animated">
                   <MapPin className="w-4 h-4 text-primary animate-bounce-soft" />
                   <span className="font-medium">{currentProfile.location}</span>
                   <Button
@@ -304,22 +311,22 @@ const Index = () => {
             )}
 
             {/* Page Stats */}
-            <div className="flex justify-center mb-8 animate-fade-in opacity-0 animate-delay-300">
+            <div className="flex justify-center mb-8 enter-blur enter-blur-delay-3">
               <PageViewCounter viewCount={viewCount} onlineCount={onlineCount} />
             </div>
 
             {/* Stats */}
             <div className="grid grid-cols-3 gap-4 md:gap-8 mt-8 max-w-lg mx-auto">
-              <div className="text-center animate-fade-in-up opacity-0 animate-delay-400">
-                <div className="text-2xl md:text-4xl font-bold text-primary">10K+</div>
+              <div className="text-center enter-blur enter-blur-delay-3 magnetic-hover p-4 rounded-xl">
+                <div className="text-2xl md:text-4xl font-bold text-primary text-glow-sm">10K+</div>
                 <div className="text-xs md:text-sm text-muted-foreground">Active Users</div>
               </div>
-              <div className="text-center animate-fade-in-up opacity-0 animate-delay-500">
-                <div className="text-2xl md:text-4xl font-bold text-primary">50+</div>
+              <div className="text-center enter-blur enter-blur-delay-4 magnetic-hover p-4 rounded-xl">
+                <div className="text-2xl md:text-4xl font-bold text-primary text-glow-sm">50+</div>
                 <div className="text-xs md:text-sm text-muted-foreground">Cities</div>
               </div>
-              <div className="text-center animate-fade-in-up opacity-0 animate-delay-700">
-                <div className="text-2xl md:text-4xl font-bold text-primary">5K+</div>
+              <div className="text-center enter-blur enter-blur-delay-5 magnetic-hover p-4 rounded-xl">
+                <div className="text-2xl md:text-4xl font-bold text-primary text-glow-sm">5K+</div>
                 <div className="text-xs md:text-sm text-muted-foreground">Connections Made</div>
               </div>
             </div>
@@ -330,8 +337,8 @@ const Index = () => {
       {/* Features Section */}
       <section className="py-16 md:py-24 bg-background">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+          <div className="text-center mb-12 enter-blur">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 shimmer-text">
               Why Choose OTHERS?
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -342,11 +349,11 @@ const Index = () => {
             {features.map((feature, index) => (
               <Card 
                 key={index} 
-                className="border-border bg-card card-hover animate-fade-in-up opacity-0"
+                className="border-border bg-card card-3d magnetic-hover spotlight overflow-hidden"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                <CardContent className="p-6 text-center">
-                  <div className="bg-primary/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 hover:animate-bounce-soft transition-all">
+                <CardContent className="p-6 text-center card-3d-inner">
+                  <div className="bg-primary/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 animate-float float-1 glow-sm">
                     {feature.icon}
                   </div>
                   <h3 className="text-xl font-semibold text-foreground mb-2">{feature.title}</h3>
@@ -362,7 +369,7 @@ const Index = () => {
       <section className="py-16 md:py-24 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 gradient-text">
               How OTHERS Works
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -373,10 +380,10 @@ const Index = () => {
             {howItWorks.map((item, index) => (
               <div 
                 key={index} 
-                className="relative text-center animate-fade-in-up opacity-0"
+                className="relative text-center magnetic-hover p-4 rounded-xl"
                 style={{ animationDelay: `${index * 150}ms` }}
               >
-                <div className="bg-gradient-to-br from-primary to-accent text-primary-foreground rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4 text-xl font-bold hover:animate-wiggle transition-all hover:scale-110">
+                <div className="bg-gradient-to-br from-primary to-accent text-primary-foreground rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4 text-xl font-bold animate-pulse-soft glow-md hover:scale-110 transition-transform duration-300">
                   {item.step}
                 </div>
                 <h3 className="text-xl font-semibold text-foreground mb-2">{item.title}</h3>
@@ -394,7 +401,7 @@ const Index = () => {
       <section className="py-16 md:py-24 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 shimmer-text">
               What Our Users Say
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -403,16 +410,16 @@ const Index = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {testimonials.map((testimonial, index) => (
-              <Card key={index} className="border-border bg-card">
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-1 mb-4">
+              <Card key={index} className="border-border bg-card magnetic-hover spotlight overflow-hidden glass-animated">
+                <CardContent className="p-6 relative">
+                  <div className="flex items-center gap-1 mb-4 wave-animate">
                     {[...Array(5)].map((_, i) => (
-                      <Sparkles key={i} className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                      <Sparkles key={i} className={`w-4 h-4 text-yellow-500 fill-yellow-500 wave-animate wave-animate-delay-${i % 3 + 1}`} />
                     ))}
                   </div>
                   <p className="text-foreground mb-4 italic">"{testimonial.text}"</p>
                   <div className="flex items-center gap-2">
-                    <div className="bg-primary/10 rounded-full w-10 h-10 flex items-center justify-center">
+                    <div className="bg-primary/10 rounded-full w-10 h-10 flex items-center justify-center glow-sm">
                       <User className="w-5 h-5 text-primary" />
                     </div>
                     <div>
@@ -428,11 +435,11 @@ const Index = () => {
       </section>
 
       {/* About Section */}
-      <section className="py-16 md:py-24 bg-muted/30">
+      <section className="py-16 md:py-24 bg-muted/30 spotlight">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 gradient-text">
                 About OTHERS
               </h2>
             </div>
@@ -444,29 +451,29 @@ const Index = () => {
                 Our platform uses advanced location-based technology to connect you with people nearby, making it easier to transition from online conversations to real-life meetups. Whether you're looking for friendship, romance, or simply expanding your social circle, OTHERS provides the tools you need.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-primary mt-0.5" />
+                <div className="flex items-start gap-3 magnetic-hover p-3 rounded-lg">
+                  <CheckCircle className="w-6 h-6 text-primary mt-0.5 animate-pulse-soft" />
                   <div>
                     <h4 className="font-semibold text-foreground">Verified Profiles</h4>
                     <p className="text-sm">All users go through our verification process for authenticity.</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-primary mt-0.5" />
+                <div className="flex items-start gap-3 magnetic-hover p-3 rounded-lg">
+                  <CheckCircle className="w-6 h-6 text-primary mt-0.5 animate-pulse-soft" />
                   <div>
                     <h4 className="font-semibold text-foreground">Privacy First</h4>
                     <p className="text-sm">Your data is encrypted and never shared with third parties.</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-primary mt-0.5" />
+                <div className="flex items-start gap-3 magnetic-hover p-3 rounded-lg">
+                  <CheckCircle className="w-6 h-6 text-primary mt-0.5 animate-pulse-soft" />
                   <div>
                     <h4 className="font-semibold text-foreground">24/7 Support</h4>
                     <p className="text-sm">Our dedicated team is always here to help you.</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-primary mt-0.5" />
+                <div className="flex items-start gap-3 magnetic-hover p-3 rounded-lg">
+                  <CheckCircle className="w-6 h-6 text-primary mt-0.5 animate-pulse-soft" />
                   <div>
                     <h4 className="font-semibold text-foreground">Free to Join</h4>
                     <p className="text-sm">Create your profile and start connecting for free.</p>
@@ -562,9 +569,16 @@ const Index = () => {
       </main>
 
       {/* CTA Section */}
-      <section className="py-16 md:py-20 bg-gradient-to-br from-primary to-accent">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
+      <section className="py-16 md:py-20 animated-gradient relative overflow-hidden">
+        {/* Floating decorative elements */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full float-1" />
+          <div className="absolute bottom-10 right-20 w-16 h-16 bg-white/10 rounded-full float-2" />
+          <div className="absolute top-1/2 left-1/4 w-12 h-12 bg-white/5 rounded-full float-3" />
+        </div>
+        
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <h2 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-4 text-glow-lg">
             Ready to Find Your Connection?
           </h2>
           <p className="text-lg text-primary-foreground/80 mb-8 max-w-2xl mx-auto">
@@ -575,7 +589,7 @@ const Index = () => {
               size="lg" 
               variant="secondary"
               onClick={() => navigate("/auth")}
-              className="text-lg px-10 py-6"
+              className="text-lg px-10 py-6 magnetic-hover btn-ripple heartbeat-cta"
             >
               Start Your Journey Today
             </Button>
@@ -586,12 +600,17 @@ const Index = () => {
       <MobileNav isAdmin={isAdmin} unreadCount={unreadCount} />
 
       {/* Footer */}
-      <footer className="bg-card border-t border-border py-8 md:py-12">
+      <footer className="bg-card border-t border-border py-8 md:py-12 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none opacity-30">
+          <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-primary/5 rounded-full blob" />
+          <div className="absolute -top-10 -right-10 w-32 h-32 bg-accent/5 rounded-full blob" />
+        </div>
+        
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-8">
             <div className="col-span-2">
               <div className="flex items-center gap-2 mb-4">
-                <img src={logo} alt="OTHERS" className="w-8 h-8 rounded-full" />
+                <img src={logo} alt="OTHERS" className="w-8 h-8 rounded-full glow-sm animate-glow-pulse" />
                 <span className="text-lg md:text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">OTHERS</span>
               </div>
               <p className="text-muted-foreground text-xs md:text-sm max-w-md mb-4">
