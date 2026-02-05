@@ -66,6 +66,62 @@ const TamilDating = () => {
       titleEn: "Relationship Advice",
       excerpt: "நீண்ட கால உறவுகளை எப்படி பராமரிப்பது. தொடர்பு மற்றும் நம்பிக்கையை கட்டமைப்பது.",
       category: "உறவு"
+    },
+    {
+      title: "காதல் மற்றும் திருமணம்",
+      titleEn: "Love and Marriage",
+      excerpt: "தமிழ் கலாச்சாரத்தில் காதல் திருமணம். பெற்றோர் சம்மதத்துடன் காதலை எப்படி வெற்றிகரமாக நடத்துவது.",
+      category: "திருமணம்"
+    },
+    {
+      title: "முதல் சந்திப்பு யோசனைகள்",
+      titleEn: "First Date Ideas",
+      excerpt: "சென்னையில் சிறந்த முதல் சந்திப்பு இடங்கள். காபி கடைகள், கடற்கரை நடை, மற்றும் பிற யோசனைகள்.",
+      category: "சந்திப்பு"
+    },
+    {
+      title: "நீண்ட தூர உறவுகள்",
+      titleEn: "Long Distance Relationships",
+      excerpt: "வெளிநாட்டில் உள்ள தமிழர்களுடன் உறவு. தூரத்தை எப்படி சமாளிப்பது, நம்பிக்கையை எப்படி கட்டமைப்பது.",
+      category: "உறவு"
+    }
+  ];
+
+  const tamilGuides = [
+    {
+      title: "ஆன்லைன் டேட்டிங் வழிகாட்டி",
+      content: "ஆன்லைன் டேட்டிங் என்பது இன்றைய காலத்தில் புதிய மக்களை சந்திக்க சிறந்த வழியாகும். OTHERS போன்ற தளங்களில் நீங்கள் உங்கள் பகுதியில் உள்ள சிங்கிள்களை எளிதாக கண்டுபிடிக்கலாம். உங்கள் சுயவிவரத்தை நேர்மையாக எழுதுங்கள், நல்ல புகைப்படங்களை பதிவேற்றுங்கள், மற்றும் பொறுமையாக இருங்கள்."
+    },
+    {
+      title: "பாதுகாப்பான டேட்டிங் குறிப்புகள்",
+      content: "ஆன்லைன் டேட்டிங்கில் பாதுகாப்பு மிகவும் முக்கியம். முதல் சந்திப்பை எப்போதும் பொது இடத்தில் வைக்கவும். உங்கள் தனிப்பட்ட தகவல்களை உடனடியாக பகிர்ந்து கொள்ள வேண்டாம். நண்பர்கள் அல்லது குடும்பத்தினரிடம் உங்கள் திட்டங்களை தெரிவிக்கவும்."
+    },
+    {
+      title: "சுயவிவரம் எழுதும் வழிகள்",
+      content: "சிறந்த சுயவிவரம் உங்கள் ஆளுமையை வெளிப்படுத்த வேண்டும். உங்கள் பொழுதுபோக்குகள், ஆர்வங்கள், மற்றும் வாழ்க்கை இலக்குகளை பகிருங்கள். நேர்மையாக இருங்கள் - போலியான தகவல்கள் நீண்ட காலத்திற்கு உதவாது."
+    },
+    {
+      title: "முதல் செய்தி எழுதுவது எப்படி",
+      content: "முதல் செய்தி சுவாரஸ்யமாக இருக்க வேண்டும். அவர்களின் சுயவிவரத்தை படித்து, அதில் உள்ள விஷயங்களைப் பற்றி கேளுங்கள். 'ஹாய்' மட்டும் போடாமல், ஒரு கேள்வியுடன் தொடங்குங்கள். உண்மையான ஆர்வத்தை காட்டுங்கள்."
+    }
+  ];
+
+  const tamilFAQs = [
+    {
+      question: "OTHERS இலவசமா?",
+      answer: "ஆம், OTHERS முற்றிலும் இலவசம். பதிவு செய்வது, சுயவிவரங்களை பார்ப்பது, செய்திகள் அனுப்புவது அனைத்தும் இலவசம். மறைக்கப்பட்ட கட்டணங்கள் எதுவும் இல்லை."
+    },
+    {
+      question: "எப்படி பதிவு செய்வது?",
+      answer: "பதிவு செய்வது மிகவும் எளிது. உங்கள் மின்னஞ்சல் முகவரியை பயன்படுத்தி கணக்கை உருவாக்கலாம். சில நிமிடங்களில் உங்கள் சுயவிவரத்தை உருவாக்கி, மற்றவர்களுடன் இணைய தொடங்கலாம்."
+    },
+    {
+      question: "என் தகவல்கள் பாதுகாப்பானதா?",
+      answer: "ஆம், உங்கள் தனிப்பட்ட தகவல்கள் குறியாக்கம் செய்யப்பட்டு பாதுகாப்பாக சேமிக்கப்படுகின்றன. நாங்கள் உங்கள் தகவல்களை மூன்றாம் தரப்பினருடன் ஒருபோதும் பகிர்ந்து கொள்ள மாட்டோம்."
+    },
+    {
+      question: "யாரையாவது புகாரளிக்க முடியுமா?",
+      answer: "ஆம், ஏதேனும் சந்தேகமான அல்லது தவறான நடத்தையை நீங்கள் புகாரளிக்கலாம். எங்கள் குழு அதை ஆய்வு செய்து தேவையான நடவடிக்கை எடுக்கும்."
     }
   ];
 
@@ -218,9 +274,9 @@ const TamilDating = () => {
             </h2>
             <p className="text-muted-foreground">உதவிகரமான குறிப்புகள் மற்றும் ஆலோசனைகள்</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {articles.map((article, index) => (
-              <Card key={index} className="border-border bg-card hover:shadow-lg transition-all cursor-pointer" onClick={() => navigate("/blog")}>
+              <Card key={index} className="border-border bg-card magnetic-hover spotlight overflow-hidden cursor-pointer" onClick={() => navigate("/blog")}>
                 <CardContent className="p-6">
                   <Badge variant="secondary" className="mb-3">{article.category}</Badge>
                   <h3 className="text-lg font-semibold text-foreground mb-1">{article.title}</h3>
@@ -234,6 +290,123 @@ const TamilDating = () => {
             <Button variant="outline" onClick={() => navigate("/blog")}>
               மேலும் கட்டுரைகள் | More Articles <ArrowRight className="ml-2 w-4 h-4" />
             </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Tamil Guides Section */}
+      <section className="py-12 md:py-16 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+              டேட்டிங் வழிகாட்டிகள் | Dating Guides
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              வெற்றிகரமான டேட்டிங் அனுபவத்திற்கான முழுமையான வழிகாட்டிகள்
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+            {tamilGuides.map((guide, index) => (
+              <Card key={index} className="border-border bg-card glass-animated">
+                <CardContent className="p-6">
+                  <h3 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
+                    <CheckCircle className="w-5 h-5 text-primary" />
+                    {guide.title}
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">{guide.content}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Tamil FAQ Section */}
+      <section className="py-12 md:py-16">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+              அடிக்கடி கேட்கப்படும் கேள்விகள் | FAQ
+            </h2>
+            <p className="text-muted-foreground">உங்கள் சந்தேகங்களுக்கு பதில்கள்</p>
+          </div>
+          <div className="max-w-3xl mx-auto space-y-4">
+            {tamilFAQs.map((faq, index) => (
+              <Card key={index} className="border-border bg-card">
+                <CardContent className="p-6">
+                  <h3 className="text-lg font-semibold text-foreground mb-3">
+                    {faq.question}
+                  </h3>
+                  <p className="text-muted-foreground">{faq.answer}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Tamil Culture & Dating Section */}
+      <section className="py-12 md:py-16 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-8 text-center">
+              தமிழ் கலாச்சாரமும் டேட்டிங்கும் | Tamil Culture & Dating
+            </h2>
+            
+            <div className="prose prose-lg max-w-none space-y-6">
+              <Card className="bg-card">
+                <CardContent className="p-6">
+                  <h3 className="text-xl font-semibold text-foreground mb-4">
+                    தமிழர்களின் உறவு மரபுகள்
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed mb-4">
+                    தமிழ் கலாச்சாரத்தில் உறவுகள் மிகவும் மதிக்கப்படுகின்றன. குடும்பம், மரியாதை, 
+                    மற்றும் நம்பிக்கை ஆகியவை தமிழ் உறவுகளின் அடிப்படையாக இருக்கின்றன. 
+                    இன்றைய நவீன காலத்திலும், இந்த மதிப்புகள் தமிழ் இளைஞர்களின் உறவுகளில் 
+                    முக்கிய பங்கு வகிக்கின்றன.
+                  </p>
+                  <p className="text-muted-foreground leading-relaxed">
+                    ஆன்லைன் டேட்டிங் தமிழ் சமூகத்தில் வேகமாக வளர்ந்து வருகிறது. நகர்ப்புற 
+                    தமிழர்கள் பாரம்பரிய மதிப்புகளை பேணிக்காத்துக்கொண்டே நவீன தொழில்நுட்பத்தை 
+                    பயன்படுத்தி புதிய உறவுகளை உருவாக்குகிறார்கள்.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-card">
+                <CardContent className="p-6">
+                  <h3 className="text-xl font-semibold text-foreground mb-4">
+                    பெற்றோர் மற்றும் காதல்
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed mb-4">
+                    தமிழ் குடும்பங்களில் பெற்றோரின் ஒப்புதல் முக்கியமானது. உங்கள் உறவை 
+                    பெற்றோரிடம் எப்படி அறிமுகப்படுத்துவது என்பது பலருக்கு சவாலாக இருக்கலாம். 
+                    திறந்த மனதுடன் பேசுங்கள், உங்கள் துணையின் நல்ல குணங்களை முன்னிலைப்படுத்துங்கள்.
+                  </p>
+                  <p className="text-muted-foreground leading-relaxed">
+                    நவீன தமிழ் பெற்றோர் பலர் தங்கள் பிள்ளைகளின் தேர்வுகளை மதிக்கிறார்கள். 
+                    முக்கியமானது நேர்மையும் வெளிப்படைத்தன்மையும் தான்.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-card">
+                <CardContent className="p-6">
+                  <h3 className="text-xl font-semibold text-foreground mb-4">
+                    வெளிநாட்டு தமிழர்களுக்கான டேட்டிங்
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed mb-4">
+                    மலேசியா, சிங்கப்பூர், அமெரிக்கா, இங்கிலாந்து மற்றும் உலகின் பல்வேறு 
+                    நாடுகளில் வாழும் தமிழர்கள் OTHERS தளத்தில் தங்கள் துணையை தேடலாம். 
+                    எங்கள் தளம் உலகளாவிய தமிழ் சமூகத்தை இணைக்கிறது.
+                  </p>
+                  <p className="text-muted-foreground leading-relaxed">
+                    நீண்ட தூர உறவுகளை நிர்வகிப்பது கடினமாக இருக்கலாம், ஆனால் தொடர்பு 
+                    மற்றும் நம்பிக்கையுடன் அவை வெற்றிகரமாக செயல்படும்.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </section>

@@ -17,6 +17,7 @@ import ScrollingNames from "@/components/ScrollingNames";
 import PageViewCounter from "@/components/PageViewCounter";
 import { useOnlinePresence } from "@/hooks/useOnlinePresence";
 import { usePageViews } from "@/hooks/usePageViews";
+import TamilContent from "@/components/TamilContent";
 import logo from "@/assets/logo.jpg";
 
 interface Profile {
@@ -450,6 +451,10 @@ const Index = () => {
               <p className="mb-6">
                 Our platform uses advanced location-based technology to connect you with people nearby, making it easier to transition from online conversations to real-life meetups. Whether you're looking for friendship, romance, or simply expanding your social circle, OTHERS provides the tools you need.
               </p>
+              <p className="mb-6 text-base">
+                <strong className="text-foreground">தமிழில்:</strong> OTHERS என்பது உங்கள் பகுதியில் அர்த்தமுள்ள உறவுகளை கண்டுபிடிக்க உதவும் நவீன சமூக இணைப்பு தளமாகும். 
+                இது முற்றிலும் இலவசம் - பதிவு செய்வது, செய்திகள் அனுப்புவது, எல்லாமே இலவசம்!
+              </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
                 <div className="flex items-start gap-3 magnetic-hover p-3 rounded-lg">
                   <CheckCircle className="w-6 h-6 text-primary mt-0.5 animate-pulse-soft" />
@@ -482,6 +487,13 @@ const Index = () => {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Tamil Content Section */}
+      <section className="py-16 md:py-24 bg-background">
+        <div className="container mx-auto px-4">
+          <TamilContent />
         </div>
       </section>
 
