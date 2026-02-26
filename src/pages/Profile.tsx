@@ -5,7 +5,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ArrowLeft, LogOut } from "lucide-react";
+import { ArrowLeft, LogOut, Trash2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import GiftPointsBadge from "@/components/GiftPointsBadge";
 import { toast } from "sonner";
 import PhotoUpload from "@/components/PhotoUpload";
@@ -47,6 +56,8 @@ const Profile = () => {
     photo: null as File | null,
   });
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const { unreadCount } = useMessageNotifications(currentProfile?.id || null);
 
   useEffect(() => {
@@ -107,6 +118,24 @@ const Profile = () => {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate("/auth");
+  };
+
+  const handleDeleteAccount = async () => {
+    setDeleting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('delete-account');
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      
+      await supabase.auth.signOut();
+      toast.success("Account deleted successfully");
+      navigate("/auth");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to delete account");
+    } finally {
+      setDeleting(false);
+      setDeleteDialogOpen(false);
+    }
   };
 
   const updateProfile = async (e: React.FormEvent) => {
@@ -345,6 +374,37 @@ const Profile = () => {
               </>
             )}
           </div>
+        </div>
+
+        <div className="bg-card rounded-lg p-6 shadow-soft border border-destructive/20">
+          <h2 className="text-lg font-semibold text-destructive mb-2">Danger Zone</h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            Permanently delete your account and all associated data. This action cannot be undone.
+          </p>
+          <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="destructive" className="gap-2">
+                <Trash2 className="w-4 h-4" />
+                Delete My Account
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Are you absolutely sure?</DialogTitle>
+                <DialogDescription>
+                  This will permanently delete your account, profile, photos, messages, posts, and all other data. This action cannot be undone.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter className="gap-2">
+                <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
+                  Cancel
+                </Button>
+                <Button variant="destructive" onClick={handleDeleteAccount} disabled={deleting}>
+                  {deleting ? "Deleting..." : "Yes, Delete Everything"}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </main>
 
