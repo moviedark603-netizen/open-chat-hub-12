@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Plus, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import HomeLogo from "@/components/HomeLogo";
 
 export default function Groups() {
   const navigate = useNavigate();
@@ -84,7 +85,10 @@ export default function Groups() {
     <div className="min-h-screen bg-background p-4 md:p-6 pb-20 md:pb-6">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-6 md:mb-8">
-          <h1 className="text-2xl md:text-3xl font-bold">Groups</h1>
+          <div className="flex items-center gap-3">
+            <HomeLogo size="sm" showText={false} />
+            <h1 className="text-2xl md:text-3xl font-bold">Groups</h1>
+          </div>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button size="sm" className="md:h-10">

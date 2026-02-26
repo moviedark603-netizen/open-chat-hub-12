@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Shield, Users, MessageSquare } from "lucide-react";
+import HomeLogo from "@/components/HomeLogo";
 
 interface Profile {
   id: string;
@@ -163,6 +164,7 @@ const Admin = () => {
     <div className="min-h-screen bg-background p-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center gap-3 mb-8">
+          <HomeLogo size="md" showText={false} />
           <Shield className="h-8 w-8 text-primary" />
           <h1 className="text-4xl font-bold">Admin Dashboard</h1>
         </div>

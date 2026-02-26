@@ -7,6 +7,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ArrowLeft, HelpCircle, MessageSquare } from "lucide-react";
+import HomeLogo from "@/components/HomeLogo";
 
 const FAQ = () => {
   const navigate = useNavigate();
@@ -145,9 +146,7 @@ const FAQ = () => {
       {/* Header */}
       <header className="bg-card border-b border-border sticky top-0 z-40">
         <div className="container mx-auto px-4 py-4 flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate("/")}>
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
+          <HomeLogo size="sm" showText={false} />
           <h1 className="text-xl font-bold text-foreground">Help Center</h1>
         </div>
       </header>

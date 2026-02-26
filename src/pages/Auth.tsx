@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Loader2, MessageSquare } from "lucide-react";
+import HomeLogo from "@/components/HomeLogo";
 import { z } from "zod";
 
 const signupSchema = z.object({
@@ -117,9 +118,7 @@ const Auth = () => {
       <Card className="w-full max-w-md shadow-strong">
         <CardHeader className="text-center space-y-2">
           <div className="flex justify-center mb-2">
-            <div className="bg-primary rounded-full p-3">
-              <MessageSquare className="w-8 h-8 text-primary-foreground" />
-            </div>
+            <HomeLogo size="lg" showText={false} />
           </div>
           <CardTitle className="text-3xl font-bold">
             {isLogin ? "Welcome Back" : "Join OTHERS"}

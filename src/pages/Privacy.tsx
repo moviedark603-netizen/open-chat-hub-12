@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import HomeLogo from "@/components/HomeLogo";
 
 const Privacy = () => {
   const navigate = useNavigate();
@@ -9,13 +10,7 @@ const Privacy = () => {
     <div className="min-h-screen bg-background">
       <header className="bg-card border-b border-border sticky top-0 z-40 backdrop-blur-sm bg-card/95">
         <div className="container mx-auto px-4 py-4 flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate(-1)}
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
+          <HomeLogo size="sm" showText={false} />
           <h1 className="text-2xl font-bold">Privacy Policy</h1>
         </div>
       </header>

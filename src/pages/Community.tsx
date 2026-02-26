@@ -11,6 +11,7 @@ import { z } from "zod";
 import AudioRecorder from "@/components/AudioRecorder";
 import PostItem from "@/components/PostItem";
 import { formatDistanceToNow } from "date-fns";
+import HomeLogo from "@/components/HomeLogo";
 
 const postSchema = z.object({
   content: z.string().trim().min(1, "Post cannot be empty").max(2000, "Post too long"),
@@ -301,14 +302,7 @@ const Community = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary to-background pb-20 md:pb-8">
       <header className="bg-card border-b border-border shadow-soft sticky top-0 z-40">
         <div className="container mx-auto px-4 py-3 md:py-4 flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate("/")}
-            className="shrink-0"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
+          <HomeLogo size="sm" showText={false} />
           <div className="flex items-center gap-2">
             <MessageSquare className="w-6 h-6 text-primary" />
             <h1 className="text-xl md:text-2xl font-bold text-card-foreground">Community Feed</h1>

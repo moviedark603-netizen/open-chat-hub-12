@@ -10,6 +10,7 @@ import { z } from "zod";
 import AudioRecorder from "@/components/AudioRecorder";
 import MessageItem from "@/components/MessageItem";
 import { useMessageNotifications } from "@/hooks/useMessageNotifications";
+import HomeLogo from "@/components/HomeLogo";
 
 const messageSchema = z.object({
   content: z.string().trim().max(1000, "Message too long"),
@@ -250,14 +251,7 @@ const Messages = () => {
   return (
     <div className="flex flex-col h-screen bg-background">
       <div className="bg-card border-b border-border p-3 md:p-4 flex items-center gap-3 shadow-soft sticky top-0 z-40">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => navigate("/")}
-          className="shrink-0"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
+        <HomeLogo size="sm" showText={false} />
         <Avatar className="w-9 h-9 md:w-10 md:h-10 shrink-0">
           <AvatarImage src={otherProfile?.photo_url || ""} />
           <AvatarFallback className="bg-primary text-primary-foreground">

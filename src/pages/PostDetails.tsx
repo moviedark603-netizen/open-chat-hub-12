@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import AudioRecorder from "@/components/AudioRecorder";
 import { formatDistanceToNow } from "date-fns";
+import HomeLogo from "@/components/HomeLogo";
 
 const replySchema = z.object({
   content: z.string().trim().min(1, "Reply cannot be empty").max(1000, "Reply too long"),
@@ -289,13 +290,7 @@ const PostDetails = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary to-background pb-20 md:pb-8">
       <header className="bg-card border-b border-border shadow-soft sticky top-0 z-40">
         <div className="container mx-auto px-4 py-3 md:py-4 flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate("/community")}
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
+          <HomeLogo size="sm" showText={false} />
           <h1 className="text-xl md:text-2xl font-bold text-card-foreground">Post Details</h1>
         </div>
       </header>

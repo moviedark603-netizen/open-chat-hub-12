@@ -14,6 +14,7 @@ import {
   Globe,
   Lock
 } from "lucide-react";
+import HomeLogo from "@/components/HomeLogo";
 
 const FreeDating = () => {
   const navigate = useNavigate();
@@ -87,6 +88,13 @@ const FreeDating = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="bg-card border-b border-border sticky top-0 z-40">
+        <div className="container mx-auto px-4 py-3 flex items-center gap-3">
+          <HomeLogo size="sm" />
+        </div>
+      </header>
+
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-primary/10 via-accent/5 to-secondary/10 py-12 md:py-20 overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>

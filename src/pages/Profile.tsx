@@ -13,6 +13,7 @@ import PhotoGallery from "@/components/PhotoGallery";
 import MobileNav from "@/components/MobileNav";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { useMessageNotifications } from "@/hooks/useMessageNotifications";
+import HomeLogo from "@/components/HomeLogo";
 
 interface Profile {
   id: string;
@@ -177,15 +178,10 @@ const Profile = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary to-background pb-20 md:pb-0">
       <header className="bg-card border-b border-border shadow-soft sticky top-0 z-40">
         <div className="container mx-auto px-4 py-3 md:py-4 flex items-center justify-between">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate("/")}
-            className="md:hidden"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-          <h1 className="text-xl md:text-2xl font-bold text-card-foreground">My Profile</h1>
+          <div className="flex items-center gap-3">
+            <HomeLogo size="sm" showText={false} />
+            <h1 className="text-xl md:text-2xl font-bold text-card-foreground">My Profile</h1>
+          </div>
           <Button variant="ghost" size="icon" onClick={handleLogout}>
             <LogOut className="w-5 h-5" />
           </Button>
