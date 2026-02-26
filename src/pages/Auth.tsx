@@ -74,6 +74,8 @@ const Auth = () => {
     } catch (error: any) {
       if (error instanceof z.ZodError) {
         toast.error(error.errors[0].message);
+      } else if (error.message === "Failed to fetch") {
+        toast.error("Network error. Please check your internet connection and try again.");
       } else {
         toast.error(error.message || "Error creating account");
       }
@@ -104,6 +106,8 @@ const Auth = () => {
     } catch (error: any) {
       if (error instanceof z.ZodError) {
         toast.error(error.errors[0].message);
+      } else if (error.message === "Failed to fetch") {
+        toast.error("Network error. Please check your internet connection and try again.");
       } else {
         toast.error(error.message || "Error signing in");
       }
