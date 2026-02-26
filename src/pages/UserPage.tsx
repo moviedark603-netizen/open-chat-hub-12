@@ -12,7 +12,7 @@ import { format } from "date-fns";
 import MobileNav from "@/components/MobileNav";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { useMessageNotifications } from "@/hooks/useMessageNotifications";
-import logo from "@/assets/logo.jpg";
+import HomeLogo from "@/components/HomeLogo";
 
 interface Profile {
   id: string;
@@ -127,10 +127,7 @@ const UserPage = () => {
       {/* Header */}
       <header className="bg-card border-b border-border sticky top-0 z-40">
         <div className="container mx-auto px-4 py-3 flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-          <img src={logo} alt="OTHERS" className="w-8 h-8 rounded-full" />
+          <HomeLogo size="sm" showText={false} />
           <span className="font-semibold text-foreground">@{profile.username}</span>
         </div>
       </header>

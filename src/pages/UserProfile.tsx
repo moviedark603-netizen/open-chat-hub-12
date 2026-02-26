@@ -17,6 +17,7 @@ import {
   Lock,
   Crown
 } from "lucide-react";
+import HomeLogo from "@/components/HomeLogo";
 import PhotoGallery from "@/components/PhotoGallery";
 import SendGiftPoints from "@/components/SendGiftPoints";
 import ConnectionActions from "@/components/ConnectionActions";
@@ -136,14 +137,7 @@ const UserProfile = () => {
       {/* Header */}
       <div className="bg-primary text-primary-foreground p-4">
         <div className="container max-w-2xl mx-auto flex items-center gap-4">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={() => navigate(-1)}
-            className="text-primary-foreground hover:bg-primary-foreground/10"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
+          <HomeLogo size="sm" showText={false} />
           <h1 className="text-xl font-bold">Profile</h1>
         </div>
       </div>

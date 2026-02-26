@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { ArrowLeft, UserPlus, Crown, Trash2 } from "lucide-react";
+import HomeLogo from "@/components/HomeLogo";
 
 export default function GroupDetails() {
   const { groupId } = useParams();
@@ -144,15 +145,17 @@ export default function GroupDetails() {
   return (
     <div className="min-h-screen bg-background p-4 md:p-6 pb-20 md:pb-6">
       <div className="max-w-4xl mx-auto">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => navigate("/groups")}
-          className="mb-4 md:mb-6"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Groups
-        </Button>
+        <div className="flex items-center gap-3 mb-4 md:mb-6">
+          <HomeLogo size="sm" showText={false} />
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate("/groups")}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Groups
+          </Button>
+        </div>
 
         <Card className="p-4 md:p-6 mb-4 md:mb-6">
           <div className="flex flex-col sm:flex-row items-start justify-between gap-4">

@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Shield, Lock, Eye, AlertTriangle, Users, Phone, MapPin, MessageSquare } from "lucide-react";
+import HomeLogo from "@/components/HomeLogo";
 
 const SafetyTips = () => {
   const navigate = useNavigate();
@@ -80,9 +81,7 @@ const SafetyTips = () => {
       {/* Header */}
       <header className="bg-card border-b border-border sticky top-0 z-40">
         <div className="container mx-auto px-4 py-4 flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate("/")}>
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
+          <HomeLogo size="sm" showText={false} />
           <h1 className="text-xl font-bold text-foreground">Safety Center</h1>
         </div>
       </header>
