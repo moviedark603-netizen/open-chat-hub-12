@@ -24,6 +24,8 @@ const loginSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
+const NETWORK_ERROR_MESSAGE = "Network issue: your browser cannot reach the authentication server from this preview. Please hard refresh, disable VPN/ad-block extensions, or try the published app URL.";
+
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -75,6 +77,13 @@ const Auth = () => {
     } catch (error: any) {
       if (error instanceof z.ZodError) {
         toast.error(error.errors[0].message);
+      } else if (error?.message?.includes("Failed to fetch")) {
+        console.error("Auth signup network error", {
+          origin: window.location.origin,
+          supabaseUrl: import.meta.env.VITE_SUPABASE_URL,
+          error,
+        });
+        toast.error(NETWORK_ERROR_MESSAGE);
       } else {
         toast.error(error.message || "Error creating account");
       }
@@ -105,6 +114,13 @@ const Auth = () => {
     } catch (error: any) {
       if (error instanceof z.ZodError) {
         toast.error(error.errors[0].message);
+      } else if (error?.message?.includes("Failed to fetch")) {
+        console.error("Auth signin network error", {
+          origin: window.location.origin,
+          supabaseUrl: import.meta.env.VITE_SUPABASE_URL,
+          error,
+        });
+        toast.error(NETWORK_ERROR_MESSAGE);
       } else {
         toast.error(error.message || "Error signing in");
       }
