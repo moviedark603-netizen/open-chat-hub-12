@@ -9,8 +9,11 @@ import { ArrowLeft, Send, Image as ImageIcon, Volume2 } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 import AudioRecorder from "@/components/AudioRecorder";
+import SignedAvatar from "@/components/SignedAvatar";
+import SignedImage from "@/components/SignedImage";
 import { formatDistanceToNow } from "date-fns";
 import HomeLogo from "@/components/HomeLogo";
+import { useSignedUrl } from "@/hooks/useSignedUrl";
 
 const replySchema = z.object({
   content: z.string().trim().min(1, "Reply cannot be empty").max(1000, "Reply too long"),
@@ -59,6 +62,7 @@ const PostDetails = () => {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isPlaying, setIsPlaying] = useState<{ [key: string]: boolean }>({});
+  const resolvedPostMedia = useSignedUrl(post?.media_url);
 
   useEffect(() => {
     checkAuth();
@@ -206,16 +210,14 @@ const PostDetails = () => {
 
       if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from("photos")
-        .getPublicUrl(fileName);
+      const storagePath = `photos:${fileName}`;
 
       const { error } = await supabase.from("post_replies").insert({
         post_id: postId,
         author_id: currentProfile.id,
         content: "",
         reply_type: "image",
-        media_url: publicUrl,
+        media_url: storagePath,
       });
 
       if (error) throw error;
@@ -248,16 +250,14 @@ const PostDetails = () => {
 
       if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from("photos")
-        .getPublicUrl(fileName);
+      const storagePath = `photos:${fileName}`;
 
       const { error } = await supabase.from("post_replies").insert({
         post_id: postId,
         author_id: currentProfile.id,
         content: "",
         reply_type: "audio",
-        media_url: publicUrl,
+        media_url: storagePath,
       });
 
       if (error) throw error;
@@ -300,12 +300,12 @@ const PostDetails = () => {
         <Card className="mb-6">
           <CardContent className="p-4">
             <div className="flex items-start gap-3 mb-3">
-              <Avatar className="w-10 h-10 shrink-0">
-                <AvatarImage src={post.author?.photo_url || ""} />
-                <AvatarFallback className="bg-primary/10 text-primary">
-                  {post.author?.name.charAt(0).toUpperCase() || "U"}
-                </AvatarFallback>
-              </Avatar>
+              <SignedAvatar
+                photoUrl={post.author?.photo_url}
+                fallbackText={post.author?.name || "U"}
+                className="w-10 h-10 shrink-0"
+                fallbackClassName="bg-primary/10 text-primary"
+              />
               <div className="flex-1 min-w-0">
                 <h3 className="font-semibold text-sm">{post.author?.name || "Unknown"}</h3>
                 <p className="text-xs text-muted-foreground">
@@ -320,17 +320,17 @@ const PostDetails = () => {
 
             {post.post_type === "image" && post.media_url && (
               <div className="space-y-2">
-                <img
-                  src={post.media_url}
-                  alt="Post"
-                  className="rounded-lg w-full max-h-96 object-cover"
-                />
-                {post.content && <p className="text-sm">{post.content}</p>}
+              <SignedImage
+                storedUrl={post.media_url}
+                alt="Post"
+                className="rounded-lg w-full max-h-96 object-cover"
+              />
+              {post.content && <p className="text-sm">{post.content}</p>}
               </div>
             )}
 
             {post.post_type === "audio" && post.media_url && (
-              <audio src={post.media_url} controls className="w-full" />
+              <audio src={resolvedPostMedia || ""} controls className="w-full" />
             )}
           </CardContent>
         </Card>
@@ -341,12 +341,12 @@ const PostDetails = () => {
             <Card key={reply.id}>
               <CardContent className="p-3">
                 <div className="flex items-start gap-2 mb-2">
-                  <Avatar className="w-8 h-8 shrink-0">
-                    <AvatarImage src={reply.author?.photo_url || ""} />
-                    <AvatarFallback className="bg-primary/10 text-primary text-xs">
-                      {reply.author?.name.charAt(0).toUpperCase() || "U"}
-                    </AvatarFallback>
-                  </Avatar>
+                  <SignedAvatar
+                    photoUrl={reply.author?.photo_url}
+                    fallbackText={reply.author?.name || "U"}
+                    className="w-8 h-8 shrink-0"
+                    fallbackClassName="bg-primary/10 text-primary text-xs"
+                  />
                   <div className="flex-1 min-w-0">
                     <h4 className="font-semibold text-xs">{reply.author?.name || "Unknown"}</h4>
                     <p className="text-xs text-muted-foreground">
@@ -360,11 +360,10 @@ const PostDetails = () => {
                 )}
 
                 {reply.reply_type === "image" && reply.media_url && (
-                  <img
-                    src={reply.media_url}
+                  <SignedImage
+                    storedUrl={reply.media_url}
                     alt="Reply"
                     className="rounded-lg max-h-64 object-cover ml-10 cursor-pointer"
-                    onClick={() => window.open(reply.media_url!, "_blank")}
                   />
                 )}
 

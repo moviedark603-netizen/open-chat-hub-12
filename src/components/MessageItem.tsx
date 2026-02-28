@@ -1,6 +1,7 @@
 import { Image as ImageIcon, Volume2 } from "lucide-react";
 import { useState, useRef } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useSignedUrl } from "@/hooks/useSignedUrl";
 
 interface MessageItemProps {
   message: {
@@ -19,6 +20,8 @@ interface MessageItemProps {
 const MessageItem = ({ message, isSent, senderName, senderPhoto }: MessageItemProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const resolvedMediaUrl = useSignedUrl(message.media_url);
+  const resolvedSenderPhoto = useSignedUrl(senderPhoto);
 
   const playAudio = () => {
     if (audioRef.current) {
@@ -36,7 +39,7 @@ const MessageItem = ({ message, isSent, senderName, senderPhoto }: MessageItemPr
     <div className={`flex gap-2 ${isSent ? "justify-end" : "justify-start"}`}>
       {!isSent && (
         <Avatar className="w-8 h-8 shrink-0 mt-1">
-          <AvatarImage src={senderPhoto || ""} />
+          <AvatarImage src={resolvedSenderPhoto || ""} />
           <AvatarFallback className="bg-primary/10 text-primary text-xs">
             {senderName?.charAt(0).toUpperCase() || "U"}
           </AvatarFallback>
@@ -53,13 +56,13 @@ const MessageItem = ({ message, isSent, senderName, senderPhoto }: MessageItemPr
           <p className="break-words">{message.content}</p>
         )}
 
-        {message.message_type === "image" && message.media_url && (
+        {message.message_type === "image" && resolvedMediaUrl && (
           <div className="space-y-2">
             <img
-              src={message.media_url}
+              src={resolvedMediaUrl}
               alt="Shared"
               className="rounded-lg max-h-64 w-full object-cover cursor-pointer"
-              onClick={() => window.open(message.media_url!, "_blank")}
+              onClick={() => window.open(resolvedMediaUrl, "_blank")}
             />
             {message.content && (
               <p className="break-words text-sm">{message.content}</p>
@@ -67,7 +70,7 @@ const MessageItem = ({ message, isSent, senderName, senderPhoto }: MessageItemPr
           </div>
         )}
 
-        {message.message_type === "audio" && message.media_url && (
+        {message.message_type === "audio" && resolvedMediaUrl && (
           <div className="flex items-center gap-2">
             <button
               onClick={playAudio}
@@ -78,7 +81,7 @@ const MessageItem = ({ message, isSent, senderName, senderPhoto }: MessageItemPr
             <span className="text-sm">Voice message</span>
             <audio
               ref={audioRef}
-              src={message.media_url}
+              src={resolvedMediaUrl}
               onEnded={() => setIsPlaying(false)}
               className="hidden"
             />

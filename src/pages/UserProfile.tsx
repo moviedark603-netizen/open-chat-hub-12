@@ -25,6 +25,7 @@ import OnlineStatusBadge from "@/components/OnlineStatusBadge";
 import MobileNav from "@/components/MobileNav";
 import { useOnlinePresence } from "@/hooks/useOnlinePresence";
 import { toast } from "sonner";
+import { useSignedUrl } from "@/hooks/useSignedUrl";
 
 interface Profile {
   id: string;
@@ -46,6 +47,7 @@ const UserProfile = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [currentProfile, setCurrentProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const resolvedProfilePhoto = useSignedUrl(profile?.photo_url);
 
   const { isUserOnline } = useOnlinePresence(
     currentProfile?.id || null,
@@ -149,7 +151,7 @@ const UserProfile = () => {
             <div className="flex flex-col items-center text-center">
               <div className="relative">
                 <Avatar className="w-24 h-24 border-4 border-background shadow-lg">
-                  <AvatarImage src={profile.photo_url || undefined} alt={profile.name} />
+                  <AvatarImage src={resolvedProfilePhoto || undefined} alt={profile.name} />
                   <AvatarFallback className="text-2xl bg-primary text-primary-foreground">
                     {profile.name?.charAt(0)?.toUpperCase() || "U"}
                   </AvatarFallback>

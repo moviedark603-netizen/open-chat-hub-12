@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { makeStoragePath } from "@/lib/storage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -44,13 +45,11 @@ const PhotoUpload = ({ profileId, onPhotoUploaded }: PhotoUploadProps) => {
 
       if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from("photos")
-        .getPublicUrl(fileName);
+      const storagePath = makeStoragePath("photos", fileName);
 
       const { error: dbError } = await supabase.from("photos").insert({
         profile_id: profileId,
-        photo_url: publicUrl,
+        photo_url: storagePath,
         is_public: isPublic,
       });
 

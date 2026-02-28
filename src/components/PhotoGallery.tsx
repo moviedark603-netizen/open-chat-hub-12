@@ -3,12 +3,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Images, Lock, Globe } from "lucide-react";
+import { getSignedUrl } from "@/lib/storage";
 
 interface Photo {
   id: string;
   photo_url: string;
   is_public: boolean;
   created_at: string;
+  resolvedUrl?: string;
 }
 
 interface PhotoGalleryProps {
@@ -31,7 +33,14 @@ const PhotoGallery = ({ profileId, refresh }: PhotoGalleryProps) => {
       .order("created_at", { ascending: false });
 
     if (!error && data) {
-      setPhotos(data);
+      // Resolve signed URLs for all photos
+      const photosWithUrls = await Promise.all(
+        data.map(async (photo) => ({
+          ...photo,
+          resolvedUrl: await getSignedUrl(photo.photo_url),
+        }))
+      );
+      setPhotos(photosWithUrls);
     }
   };
 
@@ -51,7 +60,7 @@ const PhotoGallery = ({ profileId, refresh }: PhotoGalleryProps) => {
             {photos.map((photo) => (
               <div key={photo.id} className="relative group">
                 <img
-                  src={photo.photo_url}
+                  src={photo.resolvedUrl || photo.photo_url}
                   alt="Photo"
                   className="w-full h-32 object-cover rounded-lg shadow-soft"
                 />

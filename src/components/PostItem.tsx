@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Volume2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { useSignedUrl } from "@/hooks/useSignedUrl";
 
 interface PostItemProps {
   post: {
@@ -27,6 +28,8 @@ const PostItem = ({ post, currentProfileId }: PostItemProps) => {
   const navigate = useNavigate();
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const resolvedMediaUrl = useSignedUrl(post.media_url);
+  const resolvedAuthorPhoto = useSignedUrl(post.author?.photo_url);
 
   const playAudio = () => {
     if (audioRef.current) {
@@ -45,7 +48,7 @@ const PostItem = ({ post, currentProfileId }: PostItemProps) => {
       <CardContent className="p-4">
         <div className="flex items-start gap-3 mb-3">
           <Avatar className="w-10 h-10 shrink-0">
-            <AvatarImage src={post.author?.photo_url || ""} />
+            <AvatarImage src={resolvedAuthorPhoto || ""} />
             <AvatarFallback className="bg-primary/10 text-primary">
               {post.author?.name.charAt(0).toUpperCase() || "U"}
             </AvatarFallback>
@@ -64,13 +67,13 @@ const PostItem = ({ post, currentProfileId }: PostItemProps) => {
             <p className="text-sm break-words whitespace-pre-wrap">{post.content}</p>
           )}
 
-          {post.post_type === "image" && post.media_url && (
+          {post.post_type === "image" && resolvedMediaUrl && (
             <div className="space-y-2">
               <img
-                src={post.media_url}
+                src={resolvedMediaUrl}
                 alt="Post"
                 className="rounded-lg w-full max-h-96 object-cover cursor-pointer"
-                onClick={() => window.open(post.media_url!, "_blank")}
+                onClick={() => window.open(resolvedMediaUrl, "_blank")}
               />
               {post.content && (
                 <p className="text-sm break-words">{post.content}</p>
@@ -78,7 +81,7 @@ const PostItem = ({ post, currentProfileId }: PostItemProps) => {
             </div>
           )}
 
-          {post.post_type === "audio" && post.media_url && (
+          {post.post_type === "audio" && resolvedMediaUrl && (
             <div className="flex items-center gap-2 p-3 bg-secondary rounded-lg">
               <button
                 onClick={playAudio}
@@ -89,17 +92,17 @@ const PostItem = ({ post, currentProfileId }: PostItemProps) => {
               <span className="text-sm font-medium">Voice Note</span>
               <audio
                 ref={audioRef}
-                src={post.media_url}
+                src={resolvedMediaUrl}
                 onEnded={() => setIsPlaying(false)}
                 className="hidden"
               />
             </div>
           )}
 
-          {post.post_type === "video" && post.media_url && (
+          {post.post_type === "video" && resolvedMediaUrl && (
             <div className="space-y-2">
               <video
-                src={post.media_url}
+                src={resolvedMediaUrl}
                 controls
                 className="rounded-lg w-full max-h-96 object-contain bg-muted"
                 preload="metadata"

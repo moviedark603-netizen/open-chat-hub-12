@@ -179,15 +179,13 @@ const Community = () => {
 
       if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from("photos")
-        .getPublicUrl(fileName);
+      const storagePath = `photos:${fileName}`;
 
       const { error } = await supabase.from("posts").insert({
         author_id: currentProfile.id,
         content: newPost || "",
         post_type: "image",
-        media_url: publicUrl,
+        media_url: storagePath,
       });
 
       if (error) throw error;
@@ -221,15 +219,13 @@ const Community = () => {
 
       if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from("photos")
-        .getPublicUrl(fileName);
+      const storagePath = `photos:${fileName}`;
 
       const { error } = await supabase.from("posts").insert({
         author_id: currentProfile.id,
         content: "",
         post_type: "audio",
-        media_url: publicUrl,
+        media_url: storagePath,
       });
 
       if (error) throw error;
@@ -273,15 +269,13 @@ const Community = () => {
 
       if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from("videos")
-        .getPublicUrl(fileName);
+      const storagePath = `videos:${fileName}`;
 
       const { error } = await supabase.from("posts").insert({
         author_id: currentProfile.id,
         content: newPost || "",
         post_type: "video",
-        media_url: publicUrl,
+        media_url: storagePath,
       });
 
       if (error) throw error;
