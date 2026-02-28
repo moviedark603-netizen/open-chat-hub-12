@@ -23,8 +23,8 @@ import logo from "@/assets/logo.jpg";
 interface Profile {
   id: string;
   name: string;
-  email: string;
-  mobile_number: string;
+  email?: string;
+  mobile_number?: string;
   photo_url: string | null;
   user_id: string;
   gender: string;
@@ -84,7 +84,7 @@ const Index = () => {
 
     let query = supabase
       .from("profiles")
-      .select("*")
+      .select("id, user_id, name, username, photo_url, gender, location, gift_points, is_premium, premium_until, created_at")
       .order("created_at", { ascending: false });
 
     if (currentUserProfile?.location) {

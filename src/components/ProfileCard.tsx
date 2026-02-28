@@ -12,8 +12,8 @@ interface ProfileCardProps {
   profile: {
     id: string;
     name: string;
-    email: string;
-    mobile_number: string;
+    email?: string;
+    mobile_number?: string;
     photo_url: string | null;
     gender: string;
     location: string;

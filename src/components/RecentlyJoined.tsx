@@ -65,7 +65,7 @@ const RecentlyJoined = ({ currentProfileId, onlineUserIds = [] }: RecentlyJoined
     setIsSearching(true);
     let supabaseQuery = supabase
       .from("profiles")
-      .select("*")
+      .select("id, name, photo_url, location, created_at, gender")
       .order("created_at", { ascending: false })
       .limit(50);
 

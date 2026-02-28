@@ -30,15 +30,17 @@ import { useSignedUrl } from "@/hooks/useSignedUrl";
 interface Profile {
   id: string;
   name: string;
-  email: string;
+  user_id?: string;
+  username?: string;
   photo_url: string | null;
   gender: string | null;
   location: string | null;
   gift_points: number;
-  telegram_id: string | null;
-  whatsapp_number: string | null;
+  telegram_id?: string | null;
+  whatsapp_number?: string | null;
   created_at: string | null;
   is_premium: boolean;
+  premium_until?: string | null;
 }
 
 const UserProfile = () => {
@@ -66,7 +68,7 @@ const UserProfile = () => {
     // Fetch the viewed profile
     const { data: viewedProfile, error: viewedError } = await supabase
       .from("profiles")
-      .select("*")
+      .select("id, user_id, name, username, photo_url, gender, location, gift_points, is_premium, premium_until, created_at")
       .eq("id", profileId)
       .maybeSingle();
 
