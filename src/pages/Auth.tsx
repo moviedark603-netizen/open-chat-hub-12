@@ -26,8 +26,44 @@ const loginSchema = z.object({
 
 const NETWORK_ERROR_MESSAGE = "Network issue: your browser cannot reach the authentication server from this preview. Please hard refresh, disable VPN/ad-block extensions, or try the published app URL.";
 
-const isFetchNetworkError = (error: unknown) =>
-  error instanceof Error && error.message?.includes("Failed to fetch");
+const isFetchNetworkError = (error: unknown) => {
+  if (!(error instanceof Error)) return false;
+
+  const normalizedMessage = error.message?.toLowerCase?.() ?? "";
+  return (
+    normalizedMessage.includes("failed to fetch") ||
+    normalizedMessage.includes("networkerror") ||
+    normalizedMessage.includes("load failed")
+  );
+};
+
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const runAuthWithRetry = async (
+  operation: () => Promise<{ error: Error | null }>,
+) => {
+  let lastError: Error | null = null;
+
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const { error } = await operation();
+
+    if (!error) {
+      return;
+    }
+
+    lastError = error;
+
+    if (!isFetchNetworkError(error) || attempt === 2) {
+      break;
+    }
+
+    await wait(700 * (attempt + 1));
+  }
+
+  if (lastError) {
+    throw lastError;
+  }
+};
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -44,11 +80,16 @@ const Auth = () => {
 
   useEffect(() => {
     const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        navigate("/");
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          navigate("/");
+        }
+      } catch (error) {
+        console.error("Auth session check failed", error);
       }
     };
+
     checkUser();
   }, [navigate]);
 
@@ -59,10 +100,8 @@ const Auth = () => {
       const validated = signupSchema.parse(formData);
       setLoading(true);
 
-      let signupError: Error | null = null;
-
-      for (let attempt = 0; attempt < 2; attempt++) {
-        const { error } = await supabase.auth.signUp({
+      await runAuthWithRetry(() =>
+        supabase.auth.signUp({
           email: validated.email,
           password: validated.password,
           options: {
@@ -74,23 +113,8 @@ const Auth = () => {
             },
             emailRedirectTo: `${window.location.origin}/`,
           },
-        });
-
-        if (!error) {
-          signupError = null;
-          break;
-        }
-
-        signupError = error;
-
-        if (!isFetchNetworkError(error) || attempt === 1) {
-          break;
-        }
-
-        await new Promise((resolve) => setTimeout(resolve, 800));
-      }
-
-      if (signupError) throw signupError;
+        }),
+      );
 
       toast.success("Account created! Redirecting...");
       navigate("/");
@@ -122,29 +146,12 @@ const Auth = () => {
       });
       setLoading(true);
 
-      let signinError: Error | null = null;
-
-      for (let attempt = 0; attempt < 2; attempt++) {
-        const { error } = await supabase.auth.signInWithPassword({
+      await runAuthWithRetry(() =>
+        supabase.auth.signInWithPassword({
           email: validated.email,
           password: validated.password,
-        });
-
-        if (!error) {
-          signinError = null;
-          break;
-        }
-
-        signinError = error;
-
-        if (!isFetchNetworkError(error) || attempt === 1) {
-          break;
-        }
-
-        await new Promise((resolve) => setTimeout(resolve, 800));
-      }
-
-      if (signinError) throw signinError;
+        }),
+      );
 
       toast.success("Welcome back!");
       navigate("/");
