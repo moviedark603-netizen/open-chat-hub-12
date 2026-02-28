@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, MapPin, Send, MessageSquare, Crown } from "lucide-react";
 import { toast } from "sonner";
+import { useSignedUrl } from "@/hooks/useSignedUrl";
 import { format } from "date-fns";
 import MobileNav from "@/components/MobileNav";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
@@ -42,6 +43,7 @@ const UserPage = () => {
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
+  const resolvedProfilePhoto = useSignedUrl(profile?.photo_url);
   const { unreadCount } = useMessageNotifications(currentProfile?.id || null);
 
   useEffect(() => {
@@ -139,7 +141,7 @@ const UserPage = () => {
           <CardContent className="pt-0 -mt-12">
             <div className="flex flex-col items-center text-center">
               <Avatar className="w-24 h-24 border-4 border-card shadow-lg">
-                <AvatarImage src={profile.photo_url || ""} />
+                <AvatarImage src={resolvedProfilePhoto || ""} />
                 <AvatarFallback className="text-2xl bg-primary text-primary-foreground">
                   {profile.name.charAt(0).toUpperCase()}
                 </AvatarFallback>

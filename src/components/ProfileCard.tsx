@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { MessageSquare, MapPin, AtSign } from "lucide-react";
 import ConnectionActions from "./ConnectionActions";
 import SendGiftPoints from "./SendGiftPoints";
+import { useSignedUrl } from "@/hooks/useSignedUrl";
 
 interface ProfileCardProps {
   profile: {
@@ -23,15 +24,16 @@ interface ProfileCardProps {
 
 const ProfileCard = ({ profile, currentProfileId }: ProfileCardProps) => {
   const navigate = useNavigate();
+  const resolvedPhotoUrl = useSignedUrl(profile.photo_url);
 
   return (
     <Card className="group overflow-hidden border-border card-3d magnetic-hover spotlight enter-blur" style={{ animationFillMode: 'forwards' }}>
       <CardContent className="p-0 card-3d-inner">
         {/* Profile Image */}
         <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-primary/10 to-accent/10 group-hover:glow-sm transition-shadow duration-500">
-          {profile.photo_url ? (
+          {resolvedPhotoUrl ? (
             <img 
-              src={profile.photo_url} 
+              src={resolvedPhotoUrl} 
               alt={profile.name}
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
             />

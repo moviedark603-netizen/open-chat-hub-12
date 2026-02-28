@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { makeStoragePath } from "@/lib/storage";
 import { Button } from "@/components/ui/button";
 import { Video, X, Upload, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -65,12 +66,10 @@ const VideoUpload = ({ onVideoUploaded, maxSizeMB = 10 }: VideoUploadProps) => {
 
       if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from("videos")
-        .getPublicUrl(fileName);
+      const storagePath = makeStoragePath("videos", fileName);
 
-      setPreviewUrl(publicUrl);
-      onVideoUploaded(publicUrl);
+      setPreviewUrl(storagePath);
+      onVideoUploaded(storagePath);
 
       toast({
         title: "Video uploaded",

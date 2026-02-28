@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { ArrowLeft, UserPlus, Crown, Trash2 } from "lucide-react";
 import HomeLogo from "@/components/HomeLogo";
+import SignedAvatar from "@/components/SignedAvatar";
 
 export default function GroupDetails() {
   const { groupId } = useParams();
@@ -214,12 +215,11 @@ export default function GroupDetails() {
             <Card key={member.id} className="p-3 md:p-4">
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
-                  <Avatar className="h-10 w-10 md:h-12 md:w-12">
-                    <AvatarImage src={member.profile?.photo_url || ""} />
-                    <AvatarFallback>
-                      {member.profile?.name?.charAt(0) || "U"}
-                    </AvatarFallback>
-                  </Avatar>
+                  <SignedAvatar
+                    photoUrl={member.profile?.photo_url}
+                    fallbackText={member.profile?.name || "U"}
+                    className="h-10 w-10 md:h-12 md:w-12"
+                  />
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-sm md:text-base truncate">{member.profile?.name}</p>
                     <p className="text-xs md:text-sm text-muted-foreground flex items-center gap-1">

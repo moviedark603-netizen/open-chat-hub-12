@@ -14,6 +14,7 @@ import MobileNav from "@/components/MobileNav";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { useMessageNotifications } from "@/hooks/useMessageNotifications";
 import HomeLogo from "@/components/HomeLogo";
+import { useSignedUrl } from "@/hooks/useSignedUrl";
 
 interface Profile {
   id: string;
@@ -35,6 +36,7 @@ const Profile = () => {
   const { isAdmin } = useIsAdmin();
   const [currentProfile, setCurrentProfile] = useState<Profile | null>(null);
   const [photoRefresh, setPhotoRefresh] = useState(0);
+  const resolvedPhotoUrl = useSignedUrl(currentProfile?.photo_url);
   const [usernameError, setUsernameError] = useState("");
   const [profileForm, setProfileForm] = useState({
     name: "",
@@ -135,11 +137,7 @@ const Profile = () => {
 
         if (uploadError) throw uploadError;
 
-        const { data: { publicUrl } } = supabase.storage
-          .from("photos")
-          .getPublicUrl(fileName);
-
-        photoUrl = publicUrl;
+        photoUrl = `photos:${fileName}`;
       }
 
       // Validate username before saving
@@ -196,7 +194,7 @@ const Profile = () => {
               <form onSubmit={updateProfile} className="space-y-4">
                 <div className="flex flex-col items-center mb-4 gap-3">
                   <Avatar className="w-24 h-24">
-                    <AvatarImage src={currentProfile?.photo_url || ""} />
+                    <AvatarImage src={resolvedPhotoUrl || ""} />
                     <AvatarFallback className="bg-primary text-primary-foreground text-3xl">
                       {profileForm.name.charAt(0).toUpperCase() || "U"}
                     </AvatarFallback>

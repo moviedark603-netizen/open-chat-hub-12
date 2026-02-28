@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useSignedUrl } from "@/hooks/useSignedUrl";
 import { ArrowLeft, Send, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -43,6 +44,7 @@ const Messages = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { resetUnreadCount } = useMessageNotifications(currentProfile?.id || null);
+  const resolvedOtherPhoto = useSignedUrl(otherProfile?.photo_url);
 
   useEffect(() => {
     const fetchProfiles = async () => {
@@ -184,16 +186,14 @@ const Messages = () => {
 
       if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from("photos")
-        .getPublicUrl(fileName);
+      const storagePath = `photos:${fileName}`;
 
       const { error } = await supabase.from("messages").insert({
         sender_id: currentProfile.id,
         receiver_id: profileId,
         content: "",
         message_type: "image",
-        media_url: publicUrl,
+        media_url: storagePath,
       });
 
       if (error) throw error;
@@ -226,16 +226,14 @@ const Messages = () => {
 
       if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from("photos")
-        .getPublicUrl(fileName);
+      const storagePath = `photos:${fileName}`;
 
       const { error } = await supabase.from("messages").insert({
         sender_id: currentProfile.id,
         receiver_id: profileId,
         content: "",
         message_type: "audio",
-        media_url: publicUrl,
+        media_url: storagePath,
       });
 
       if (error) throw error;
@@ -253,7 +251,7 @@ const Messages = () => {
       <div className="bg-card border-b border-border p-3 md:p-4 flex items-center gap-3 shadow-soft sticky top-0 z-40">
         <HomeLogo size="sm" showText={false} />
         <Avatar className="w-9 h-9 md:w-10 md:h-10 shrink-0">
-          <AvatarImage src={otherProfile?.photo_url || ""} />
+          <AvatarImage src={resolvedOtherPhoto || ""} />
           <AvatarFallback className="bg-primary text-primary-foreground">
             {otherProfile?.name.charAt(0).toUpperCase()}
           </AvatarFallback>
@@ -272,7 +270,7 @@ const Messages = () => {
               message={message} 
               isSent={isSent}
               senderName={otherProfile?.name}
-              senderPhoto={otherProfile?.photo_url}
+              senderPhoto={resolvedOtherPhoto}
             />
           );
         })}
