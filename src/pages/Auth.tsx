@@ -26,6 +26,9 @@ const loginSchema = z.object({
 
 const NETWORK_ERROR_MESSAGE = "Network issue: your browser cannot reach the authentication server from this preview. Please hard refresh, disable VPN/ad-block extensions, or try the published app URL.";
 
+const isFetchNetworkError = (error: unknown) =>
+  error instanceof Error && error.message?.includes("Failed to fetch");
+
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -56,28 +59,45 @@ const Auth = () => {
       const validated = signupSchema.parse(formData);
       setLoading(true);
 
-      const { error } = await supabase.auth.signUp({
-        email: validated.email,
-        password: validated.password,
-        options: {
-          data: {
-            name: validated.name,
-            mobile_number: validated.mobile,
-            gender: validated.gender,
-            location: validated.location,
-          },
-          emailRedirectTo: `${window.location.origin}/`,
-        },
-      });
+      let signupError: Error | null = null;
 
-      if (error) throw error;
+      for (let attempt = 0; attempt < 2; attempt++) {
+        const { error } = await supabase.auth.signUp({
+          email: validated.email,
+          password: validated.password,
+          options: {
+            data: {
+              name: validated.name,
+              mobile_number: validated.mobile,
+              gender: validated.gender,
+              location: validated.location,
+            },
+            emailRedirectTo: `${window.location.origin}/`,
+          },
+        });
+
+        if (!error) {
+          signupError = null;
+          break;
+        }
+
+        signupError = error;
+
+        if (!isFetchNetworkError(error) || attempt === 1) {
+          break;
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 800));
+      }
+
+      if (signupError) throw signupError;
 
       toast.success("Account created! Redirecting...");
       navigate("/");
     } catch (error: any) {
       if (error instanceof z.ZodError) {
         toast.error(error.errors[0].message);
-      } else if (error?.message?.includes("Failed to fetch")) {
+      } else if (isFetchNetworkError(error)) {
         console.error("Auth signup network error", {
           origin: window.location.origin,
           supabaseUrl: import.meta.env.VITE_SUPABASE_URL,
@@ -102,19 +122,36 @@ const Auth = () => {
       });
       setLoading(true);
 
-      const { error } = await supabase.auth.signInWithPassword({
-        email: validated.email,
-        password: validated.password,
-      });
+      let signinError: Error | null = null;
 
-      if (error) throw error;
+      for (let attempt = 0; attempt < 2; attempt++) {
+        const { error } = await supabase.auth.signInWithPassword({
+          email: validated.email,
+          password: validated.password,
+        });
+
+        if (!error) {
+          signinError = null;
+          break;
+        }
+
+        signinError = error;
+
+        if (!isFetchNetworkError(error) || attempt === 1) {
+          break;
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 800));
+      }
+
+      if (signinError) throw signinError;
 
       toast.success("Welcome back!");
       navigate("/");
     } catch (error: any) {
       if (error instanceof z.ZodError) {
         toast.error(error.errors[0].message);
-      } else if (error?.message?.includes("Failed to fetch")) {
+      } else if (isFetchNetworkError(error)) {
         console.error("Auth signin network error", {
           origin: window.location.origin,
           supabaseUrl: import.meta.env.VITE_SUPABASE_URL,
