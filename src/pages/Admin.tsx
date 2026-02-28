@@ -37,6 +37,7 @@ const Admin = () => {
   const { toast } = useToast();
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [currentAdminProfileId, setCurrentAdminProfileId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -47,9 +48,21 @@ const Admin = () => {
 
   useEffect(() => {
     if (isAdmin) {
+      fetchAdminProfile();
       fetchData();
     }
   }, [isAdmin]);
+
+  const fetchAdminProfile = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+    const { data } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("user_id", user.id)
+      .single();
+    if (data) setCurrentAdminProfileId(data.id);
+  };
 
   const fetchData = async () => {
     try {
@@ -212,7 +225,8 @@ const Admin = () => {
                           <Button
                             variant="destructive"
                             size="sm"
-                            onClick={() => blockProfile(profile.id, profiles[0]?.id)}
+                            onClick={() => blockProfile(profile.id, currentAdminProfileId || '')}
+                            disabled={!currentAdminProfileId}
                           >
                             Block
                           </Button>

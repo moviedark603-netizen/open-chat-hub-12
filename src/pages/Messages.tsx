@@ -66,7 +66,7 @@ const Messages = () => {
 
       const { data: otherProfileData } = await supabase
         .from("profiles")
-        .select("*")
+        .select("id, user_id, name, username, photo_url, gender, location, gift_points, is_premium, created_at")
         .eq("id", profileId)
         .single();
 

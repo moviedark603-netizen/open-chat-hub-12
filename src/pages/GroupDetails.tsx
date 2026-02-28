@@ -55,7 +55,7 @@ export default function GroupDetails() {
         .from("group_members")
         .select(`
           *,
-          profile:profiles(*)
+          profile:profiles(id, name, photo_url, gender, location)
         `)
         .eq("group_id", groupId);
       if (error) throw error;
@@ -70,7 +70,7 @@ export default function GroupDetails() {
       const memberIds = members?.map(m => m.profile_id) || [];
       const { data, error } = await supabase
         .from("profiles")
-        .select("*")
+        .select("id, name, photo_url, gender, location")
         .not("id", "in", `(${memberIds.join(",")})`);
       if (error) throw error;
       return data;
