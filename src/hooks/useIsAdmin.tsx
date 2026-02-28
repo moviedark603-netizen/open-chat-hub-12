@@ -15,12 +15,7 @@ export const useIsAdmin = () => {
           return;
         }
 
-        const { data, error } = await supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", user.id)
-          .eq("role", "admin")
-          .maybeSingle();
+        const { data, error } = await supabase.rpc('verify_admin_access');
 
         if (error) throw error;
         setIsAdmin(!!data);
