@@ -190,14 +190,16 @@ const Auth = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={isLogin ? handleLogin : handleSignUp} className="space-y-4">
+          <form onSubmit={isLogin ? handleLogin : handleSignUp} className="space-y-4" noValidate>
             {!isLogin && (
               <>
                 <div className="space-y-2">
                   <Label htmlFor="name">Name</Label>
                   <Input
                     id="name"
+                    name="name"
                     type="text"
+                    autoComplete="name"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="Enter your name"
@@ -208,7 +210,10 @@ const Auth = () => {
                   <Label htmlFor="mobile">Mobile Number</Label>
                   <Input
                     id="mobile"
+                    name="mobile"
                     type="tel"
+                    inputMode="numeric"
+                    autoComplete="tel"
                     value={formData.mobile}
                     onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
                     placeholder="Enter your mobile number"
@@ -232,7 +237,9 @@ const Auth = () => {
                   <Label htmlFor="location">Location</Label>
                   <Input
                     id="location"
+                    name="location"
                     type="text"
+                    autoComplete="address-level2"
                     value={formData.location}
                     onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                     placeholder="City, State or Country"
@@ -245,7 +252,12 @@ const Auth = () => {
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
+                name="email"
                 type="email"
+                autoComplete="email"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 placeholder="Enter your email"
@@ -256,7 +268,12 @@ const Auth = () => {
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
+                name="password"
                 type="password"
+                autoComplete={isLogin ? "current-password" : "new-password"}
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 placeholder="Enter your password"
