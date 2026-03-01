@@ -39,6 +39,53 @@ const isFetchNetworkError = (error: unknown) => {
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+type ProxyAuthAction = "signup" | "signin";
+
+type ProxyAuthPayload = {
+  action: ProxyAuthAction;
+  email: string;
+  password: string;
+  redirectTo?: string;
+  data?: {
+    name: string;
+    mobile_number: string;
+    gender: "man" | "woman";
+    location: string;
+  };
+};
+
+type ProxyAuthResponse = {
+  error?: { message?: string } | string;
+  access_token?: string;
+  refresh_token?: string;
+  session?: {
+    access_token?: string;
+    refresh_token?: string;
+  } | null;
+};
+
+const runAuthViaProxy = async (payload: ProxyAuthPayload): Promise<ProxyAuthResponse> => {
+  const { data, error } = await supabase.functions.invoke("auth-proxy", {
+    body: payload,
+  });
+
+  if (error) {
+    throw new Error(error.message || "Authentication service is temporarily unavailable.");
+  }
+
+  const response = (data ?? {}) as ProxyAuthResponse;
+
+  if (response.error) {
+    const message =
+      typeof response.error === "string"
+        ? response.error
+        : response.error.message || "Authentication request failed";
+    throw new Error(message);
+  }
+
+  return response;
+};
+
 const runAuthWithRetry = async (
   operation: () => Promise<{ error: Error | null }>,
 ) => {
@@ -100,8 +147,8 @@ const Auth = () => {
       const validated = signupSchema.parse(formData);
       setLoading(true);
 
-      await runAuthWithRetry(() =>
-        supabase.auth.signUp({
+      await runAuthWithRetry(async () => {
+        const { error } = await supabase.auth.signUp({
           email: validated.email,
           password: validated.password,
           options: {
@@ -113,8 +160,40 @@ const Auth = () => {
             },
             emailRedirectTo: `${window.location.origin}/`,
           },
-        }),
-      );
+        });
+
+        if (!error) {
+          return { error: null };
+        }
+
+        if (!isFetchNetworkError(error)) {
+          return { error };
+        }
+
+        try {
+          await runAuthViaProxy({
+            action: "signup",
+            email: validated.email,
+            password: validated.password,
+            redirectTo: `${window.location.origin}/`,
+            data: {
+              name: validated.name,
+              mobile_number: validated.mobile,
+              gender: validated.gender,
+              location: validated.location,
+            },
+          });
+
+          return { error: null };
+        } catch (proxyError) {
+          return {
+            error:
+              proxyError instanceof Error
+                ? proxyError
+                : new Error("Error creating account"),
+          };
+        }
+      });
 
       toast.success("Account created! Redirecting...");
       navigate("/");
@@ -146,12 +225,51 @@ const Auth = () => {
       });
       setLoading(true);
 
-      await runAuthWithRetry(() =>
-        supabase.auth.signInWithPassword({
+      await runAuthWithRetry(async () => {
+        const { error } = await supabase.auth.signInWithPassword({
           email: validated.email,
           password: validated.password,
-        }),
-      );
+        });
+
+        if (!error) {
+          return { error: null };
+        }
+
+        if (!isFetchNetworkError(error)) {
+          return { error };
+        }
+
+        try {
+          const proxyResult = await runAuthViaProxy({
+            action: "signin",
+            email: validated.email,
+            password: validated.password,
+          });
+
+          const accessToken = proxyResult.session?.access_token ?? proxyResult.access_token;
+          const refreshToken = proxyResult.session?.refresh_token ?? proxyResult.refresh_token;
+
+          if (!accessToken || !refreshToken) {
+            return {
+              error: new Error("Unable to establish login session. Please try again."),
+            };
+          }
+
+          const { error: setSessionError } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+          });
+
+          return { error: setSessionError };
+        } catch (proxyError) {
+          return {
+            error:
+              proxyError instanceof Error
+                ? proxyError
+                : new Error("Error signing in"),
+          };
+        }
+      });
 
       toast.success("Welcome back!");
       navigate("/");
