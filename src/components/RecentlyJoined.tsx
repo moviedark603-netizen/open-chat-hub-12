@@ -124,12 +124,14 @@ const RecentlyJoined = ({ currentProfileId, onlineUserIds = [] }: RecentlyJoined
   const displayedProfiles = showAll ? recentProfiles : recentProfiles.slice(0, 6);
 
   return (
-    <Card className="overflow-hidden animate-fade-in">
+    <Card className="overflow-hidden animate-fade-in border-primary/10 shadow-lg">
       <CardContent className="p-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <div className="flex items-center gap-2">
             <UserPlus className="w-5 h-5 text-primary animate-bounce-soft" />
-            <h2 className="text-lg font-semibold">Recently Joined</h2>
+            <h2 className="text-lg font-semibold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+              Recently Joined
+            </h2>
           </div>
           
           <div className="flex items-center gap-2 flex-wrap">
@@ -179,13 +181,14 @@ const RecentlyJoined = ({ currentProfileId, onlineUserIds = [] }: RecentlyJoined
                 <div
                   key={profile.id}
                   onClick={() => currentProfileId ? navigate(`/messages/${profile.id}`) : navigate("/auth")}
-                  className="flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-muted cursor-pointer transition-all hover-scale animate-fade-in-up opacity-0"
-                  style={{ animationDelay: `${index * 50}ms`, animationFillMode: 'forwards' }}
+                  className="group flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-primary/5 cursor-pointer transition-all duration-300 hover:shadow-md hover:shadow-primary/10 hover:-translate-y-1 animate-scale-in opacity-0 border border-transparent hover:border-primary/20"
+                  style={{ animationDelay: `${index * 80}ms`, animationFillMode: 'forwards' }}
                 >
                   <div className="relative">
-                    <Avatar className="w-16 h-16 ring-2 ring-primary/20 hover:ring-primary/50 transition-all">
-                      <AvatarImage src={profile.photo_url || ""} />
-                      <AvatarFallback className="bg-primary text-primary-foreground text-lg">
+                    <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-primary/30 to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
+                    <Avatar className="relative w-16 h-16 ring-2 ring-primary/20 group-hover:ring-primary/60 transition-all duration-300 group-hover:scale-110">
+                      <AvatarImage src={profile.photo_url || ""} className="object-cover" />
+                      <AvatarFallback className="bg-gradient-to-br from-primary to-primary/70 text-primary-foreground text-lg font-bold">
                         {profile.name.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
@@ -195,7 +198,7 @@ const RecentlyJoined = ({ currentProfileId, onlineUserIds = [] }: RecentlyJoined
                   </div>
                   <div className="text-center w-full">
                     <div className="flex items-center justify-center gap-1">
-                      <h3 className="font-semibold text-sm truncate">{profile.name}</h3>
+                      <h3 className="font-semibold text-sm truncate group-hover:text-primary transition-colors duration-300">{profile.name}</h3>
                     </div>
                     <div className="flex items-center justify-center gap-1 text-xs text-muted-foreground">
                       <MapPin className="w-3 h-3" />
