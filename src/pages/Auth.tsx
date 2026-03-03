@@ -148,26 +148,34 @@ const Auth = () => {
       setLoading(true);
 
       await runAuthWithRetry(async () => {
-        const { error } = await supabase.auth.signUp({
-          email: validated.email,
-          password: validated.password,
-          options: {
-            data: {
-              name: validated.name,
-              mobile_number: validated.mobile,
-              gender: validated.gender,
-              location: validated.location,
+        try {
+          const { error } = await supabase.auth.signUp({
+            email: validated.email,
+            password: validated.password,
+            options: {
+              data: {
+                name: validated.name,
+                mobile_number: validated.mobile,
+                gender: validated.gender,
+                location: validated.location,
+              },
+              emailRedirectTo: `${window.location.origin}/`,
             },
-            emailRedirectTo: `${window.location.origin}/`,
-          },
-        });
+          });
 
-        if (!error) {
-          return { error: null };
-        }
+          if (!error) {
+            return { error: null };
+          }
 
-        if (!isFetchNetworkError(error)) {
-          return { error };
+          if (!isFetchNetworkError(error)) {
+            return { error };
+          }
+        } catch (directError) {
+          if (!isFetchNetworkError(directError)) {
+            return {
+              error: directError instanceof Error ? directError : new Error("Error creating account"),
+            };
+          }
         }
 
         try {
@@ -226,17 +234,25 @@ const Auth = () => {
       setLoading(true);
 
       await runAuthWithRetry(async () => {
-        const { error } = await supabase.auth.signInWithPassword({
-          email: validated.email,
-          password: validated.password,
-        });
+        try {
+          const { error } = await supabase.auth.signInWithPassword({
+            email: validated.email,
+            password: validated.password,
+          });
 
-        if (!error) {
-          return { error: null };
-        }
+          if (!error) {
+            return { error: null };
+          }
 
-        if (!isFetchNetworkError(error)) {
-          return { error };
+          if (!isFetchNetworkError(error)) {
+            return { error };
+          }
+        } catch (directError) {
+          if (!isFetchNetworkError(directError)) {
+            return {
+              error: directError instanceof Error ? directError : new Error("Error signing in"),
+            };
+          }
         }
 
         try {
