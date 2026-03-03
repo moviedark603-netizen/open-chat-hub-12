@@ -12,6 +12,7 @@ import { useGiftNotifications } from "@/hooks/useGiftNotifications";
 import MobileNav from "@/components/MobileNav";
 import RecentMessages from "@/components/RecentMessages";
 import RecentlyJoined from "@/components/RecentlyJoined";
+import UserDashboard from "@/components/UserDashboard";
 import ProfileSearch from "@/components/ProfileSearch";
 import ScrollingNames from "@/components/ScrollingNames";
 import PageViewCounter from "@/components/PageViewCounter";
@@ -248,7 +249,14 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Recently Joined Section - Top */}
+      {/* User Dashboard Section */}
+      <section className="bg-background border-b border-border py-4 enter-blur">
+        <div className="container mx-auto px-4">
+          <UserDashboard currentProfileId={currentProfile?.id || null} onlineUserIds={getOnlineUserIds()} />
+        </div>
+      </section>
+
+      {/* Recently Joined Section */}
       <section className="bg-background border-b border-border py-4 enter-blur">
         <div className="container mx-auto px-4">
           <RecentlyJoined currentProfileId={currentProfile?.id || null} onlineUserIds={getOnlineUserIds()} />
