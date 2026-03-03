@@ -358,6 +358,7 @@ export type Database = {
           gift_points: number
           id: string
           is_premium: boolean
+          last_seen_at: string | null
           location: string | null
           mobile_number: string
           name: string
@@ -375,6 +376,7 @@ export type Database = {
           gift_points?: number
           id?: string
           is_premium?: boolean
+          last_seen_at?: string | null
           location?: string | null
           mobile_number: string
           name: string
@@ -392,6 +394,7 @@ export type Database = {
           gift_points?: number
           id?: string
           is_premium?: boolean
+          last_seen_at?: string | null
           location?: string | null
           mobile_number?: string
           name?: string
